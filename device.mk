@@ -44,13 +44,13 @@ PRODUCT_SHIPPING_API_LEVEL := 21
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.0-impl \
+    vendor.lineage.power@1.0-impl \
     power.default \
     power.mt6795
 
 # Camera
-#PRODUCT_PACKAGES += \
-#    Snap
+PRODUCT_PACKAGES += \
+    Snap
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -155,7 +155,7 @@ PRODUCT_PACKAGES += \
 
 # Vibrator HIDL HAL
 PRODUCT_PACKAGES += \
-    android.hardware.vibrator@1.0-impl
+    android.hardware.vibrator@1.0-service.mediatek
 
 # RenderScript HIDL HAL
 PRODUCT_PACKAGES += \
@@ -347,21 +347,39 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ecc_list.xml:system/etc/ecc_list.xml \
     $(LOCAL_PATH)/configs/spn-conf.xml:system/etc/spn-conf.xml
 
-# MTK Helpers 
-PRODUCT_PACKAGES += \
-   libccci_util   \
-   libmtkshim_log \
-   libmtkshim_audio \
-   libmtkshim_ui \
-   libmtkshim_omx \
-   libmtkshim_gps
-
-# Include symbols
-LINKER_FORCED_SHIM_LIBS := /system/lib/liblog.so|libmtkshim_log.so:/system/lib64/liblog.so|libmtkshim_log.so
-LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/hw/audio.primary.$(TARGET_BOARD_PLATFORM).so|libmtkshim_audio.so
-LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/libui.so|libmtkshim_ui.so:/system/lib64/libui.so|libmtkshim_ui.so
-LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/libMtkOmxVdec.so|libmtkshim_omx.so
-LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/vendor/bin/mtk_agpsd|libmtkshim_gps.so
+# Mtk symbols & shim
+ifeq ($(LIBSHIM_XLOG_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_xlog
+LINKER_FORCED_SHIM_LIBS := /system/lib/liblog.so|libshim_xlog.so:/system/lib64/liblog.so|libshim_xlog.so
+endif
+ifeq ($(LIBSHIM_SND_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_snd
+LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/libmedia.so|libshim_snd.so:/system/lib64/libmedia.so|libshim_snd.so
+endif
+ifeq ($(LIBSHIM_UI_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_ui
+LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/libui.so|libshim_ui.so:/system/lib64/libui.so|libshim_ui.so
+endif
+ifeq ($(LIBSHIM_GUI_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_gui
+LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/libgui.so|libshim_gui.so:/system/lib64/libgui.so|libshim_gui.so
+endif
+ifeq ($(LIBSHIM_OMX_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_omx
+LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/vendor/lib/libMtkOmxVdec.so|libshim_omx.so
+endif
+ifeq ($(LIBSHIM_BIONIC_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_bionic
+LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/libc.so|libshims_bionic.so:/system/lib64/libc.so|libshims_bionic.so
+endif
+ifeq ($(LIBSHIM_AGPS_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_agps
+LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/vendor/bin/mtk_agpsd|libshim_agps.so
+endif
+ifeq ($(LIBSHIM_ATOMIC_SYMBOLS),true)
+PRODUCT_PACKAGES += libshim_atomic
+LINKER_FORCED_SHIM_LIBS := $(LINKER_FORCED_SHIM_LIBS):/system/lib/libcutils.so|libshim_atomic.so:/system/lib64/libcutils.so|libshim_atomic.so
+endif
 
 # Sensor Calibration
 PRODUCT_PACKAGES += libem_sensor_jni
@@ -404,11 +422,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.fw.dex2oat_thread_count=8
 
-# WLAN
-PRODUCT_PACKAGE += \
-    wificond \
-    wifilogd
-
 # ConsumerIR
 PRODUCT_PACKAGES += \
     consumerir.default \
@@ -416,7 +429,7 @@ PRODUCT_PACKAGES += \
 
 # HIDL
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/hidl/manifest.xml:system/vendor/manifest.xml
+    $(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
 
 # Mediaserver with system group
 PRODUCT_COPY_FILES += \
@@ -465,6 +478,3 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.android.dataroaming=false \
     net.tethering.noprovisioning=true \
     ro.setupwizard.rotation_locked=true
-
-# AOSP Common
-$(call inherit-product, vendor/aosp/config.mk)

@@ -1,17 +1,25 @@
+#!/bin/sh
+
 echo $1
 rootdirectory="$PWD"
 # ---------------------------------
 
-dirs="build/make/core build/soong bionic frameworks/av frameworks/native system/core packages/apps/PackageInstaller packages/apps/Settings packages/inputmethods/LatinIME packages/services/Telephony"
+dirs="bionic build/make/core build/soong frameworks/av frameworks/base hardware/interfaces system/core vendor/lineage"
+
+# red + nocolor
+RED='\033[0;31m'
+NC='\033[0m'
+
 
 for dir in $dirs ; do
 	cd $rootdirectory
 	cd $dir
-	echo "Applying $dir patches..."
-	git apply $rootdirectory/device/xiaomi/hermes/patches/$dir/*.patch
-	echo " "
+        echo -e "\n${RED}Applying ${NC}$dir ${RED}patches...${NC}\n"
+	#git am $rootdirectory/vendor/mediatek/patches/$dir/*.patch
+	git apply -v $rootdirectory/vendor/mediatek/patches/$dir/*.patch
 done
 
 # -----------------------------------
-echo "Changing to build directory..."
+echo -e "Done !\n"
 cd $rootdirectory
+
