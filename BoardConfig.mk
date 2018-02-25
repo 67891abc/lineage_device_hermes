@@ -89,7 +89,8 @@ BLOCK_BASED_OTA := false
 TARGET_CPU_MEMCPY_OPT_DISABLE := true
 
 # HIDL Manifest
-DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/hidl/manifest.xml
+DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
+DEVICE_MATRIX_FILE   := $(LOCAL_PATH)/compatibility_matrix.xml
 
 # Display
 USE_OPENGL_RENDERER := true
@@ -151,10 +152,10 @@ MTK_IRTX_SUPPORT := true
 MTK_FM_SUPPORT := yes
 MTK_FM_RX_SUPPORT := yes
 
-# CMHW
+# LineageHW
 #BOARD_USES_CYANOGEN_HARDWARE := true
-#BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw
-#TARGET_TAP_TO_WAKE_NODE := "/sys/devices/bus.2/11009000.I2C2/i2c-2/2-004b/input/input4/wake_gesture"
+BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/lineagehw
+TARGET_TAP_TO_WAKE_NODE := "/sys/devices/bus.2/11009000.I2C2/i2c-2/2-004b/input/input4/wake_gesture"
 
 # Wifi
 WPA_SUPPLICANT_VERSION := VER_0_8_X
