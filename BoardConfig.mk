@@ -153,9 +153,9 @@ MTK_FM_SUPPORT := yes
 MTK_FM_RX_SUPPORT := yes
 
 # LineageHW
-#BOARD_USES_CYANOGEN_HARDWARE := true
+BOARD_USES_LINEAGE_HARDWARE := true
 BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/lineagehw
-TARGET_TAP_TO_WAKE_NODE := "/sys/devices/bus.2/11009000.I2C2/i2c-2/2-004b/input/input4/wake_gesture"
+#TARGET_TAP_TO_WAKE_NODE := "/sys/devices/bus.2/11009000.I2C2/i2c-2/2-004b/input/input4/wake_gesture"
 
 # Wifi
 WPA_SUPPLICANT_VERSION := VER_0_8_X
