@@ -480,3 +480,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.android.dataroaming=false \
     net.tethering.noprovisioning=true \
     ro.setupwizard.rotation_locked=true
+
+# GPS force mode
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.force.gps.mode=gnss
