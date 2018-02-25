@@ -1,0 +1,314 @@
+From dbbc35eacf8df47f141d7dec8a0b5f680c491414 Mon Sep 17 00:00:00 2001
+From: Dinolek <dinolek@o2.pl>
+Date: Wed, 30 Aug 2017 14:07:11 +0200
+Subject: [PATCH] Fix boot for RN2
+
+---
+ init/Android.mk              |  5 +++++
+ init/init.cpp                | 13 +++++++------
+ init/service.cpp             |  2 ++
+ init/vendor_init.cpp         |  7 -------
+ init/vendor_init.h           |  1 -
+ libziparchive/zip_archive.cc | 23 +----------------------
+ mkbootimg/mkbootimg          | 33 +++++++++++++++++++++++----------
+ mkbootimg/unpackbootimg      | 13 ++++++++++++-
+ rootdir/init.usb.rc          |  2 +-
+ 9 files changed, 51 insertions(+), 48 deletions(-)
+
+diff --git a/init/Android.mk b/init/Android.mk
+index 0f5fe1c..8231b14 100644
+--- a/init/Android.mk
++++ b/init/Android.mk
+@@ -10,6 +10,11 @@ else
+ init_options += -DALLOW_LOCAL_PROP_OVERRIDE=0 -DALLOW_PERMISSIVE_SELINUX=0
+ endif
+ 
++# Enable MTK stuff
++ifeq ($(BOARD_HAS_MTK_HARDWARE), true)
++LOCAL_CFLAGS += -DMTK_HARDWARE
++endif
++
+ init_options += -DLOG_UEVENTS=0
+ 
+ ifneq ($(TARGET_INIT_COLDBOOT_TIMEOUT),)
+diff --git a/init/init.cpp b/init/init.cpp
+index 7a37059..44da504 100644
+--- a/init/init.cpp
++++ b/init/init.cpp
+@@ -66,7 +66,6 @@
+ #include "ueventd.h"
+ #include "util.h"
+ #include "watchdogd.h"
+-#include "vendor_init.h"
+ 
+ struct selabel_handle *sehandle;
+ struct selabel_handle *sehandle_prop;
+@@ -148,9 +147,9 @@ static void restart_processes()
+ }
+ 
+ void handle_control_message(const std::string& msg, const std::string& name) {
+-    if (!vendor_handle_control_message(msg, name)) {
+-        return;
+-    }
++#    if (!vendor_handle_control_message(msg, name)) {
++#        return;
++#    }
+     Service* svc = ServiceManager::GetInstance().FindServiceByName(name);
+     if (svc == nullptr) {
+         ERROR("no such service '%s'\n", name.c_str());
+@@ -366,7 +365,7 @@ static void export_kernel_boot_props() {
+         { "ro.boot.mode",       "ro.bootmode",   "unknown", },
+         { "ro.boot.baseband",   "ro.baseband",   "unknown", },
+         { "ro.boot.bootloader", "ro.bootloader", "unknown", },
+-        { "ro.boot.hardware",   "ro.hardware",   "unknown", },
++        { "ro.boot.hardware",   "ro.hardware",   "6795", },
+ #ifndef IGNORE_RO_BOOT_REVISION
+         { "ro.boot.revision",   "ro.revision",   "0", },
+ #endif
+@@ -440,6 +439,7 @@ static void selinux_init_all_handles(void)
+     sehandle_prop = selinux_android_prop_context_handle();
+ }
+ 
++#if 0
+ enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
+ 
+ static selinux_enforcing_status selinux_status_from_cmdline() {
+@@ -453,11 +453,12 @@ static selinux_enforcing_status selinux_status_from_cmdline() {
+ 
+     return status;
+ }
++#endif
+ 
+ static bool selinux_is_enforcing(void)
+ {
+     if (ALLOW_PERMISSIVE_SELINUX) {
+-        return selinux_status_from_cmdline() == SELINUX_ENFORCING;
++        return false;
+     }
+     return true;
+ }
+diff --git a/init/service.cpp b/init/service.cpp
+index 8127e70..a09fd8f 100644
+--- a/init/service.cpp
++++ b/init/service.cpp
+@@ -371,12 +371,14 @@ bool Service::Start() {
+             scon = ret_scon;
+             free(ret_scon);
+         }
++#if 0
+         if (rc == 0 && scon == mycon) {
+             ERROR("Service %s does not have a SELinux domain defined.\n", name_.c_str());
+             free(mycon);
+             free(fcon);
+             return false;
+         }
++#endif
+         free(mycon);
+         free(fcon);
+         if (rc < 0) {
+diff --git a/init/vendor_init.cpp b/init/vendor_init.cpp
+index 41a263b..d3fd5ff 100644
+--- a/init/vendor_init.cpp
++++ b/init/vendor_init.cpp
+@@ -28,7 +28,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+ #include "vendor_init.h"
+-#include <errno.h>
+ 
+ /* init vendor override stubs */
+ 
+@@ -36,9 +35,3 @@ __attribute__ ((weak))
+ void vendor_load_properties()
+ {
+ }
+-
+-__attribute__ ((weak))
+-int vendor_handle_control_message(const std::string& msg, const std::string& name)
+-{
+-    return -ENOSYS;
+-}
+diff --git a/init/vendor_init.h b/init/vendor_init.h
+index 9491bc4..0d99529 100644
+--- a/init/vendor_init.h
++++ b/init/vendor_init.h
+@@ -32,5 +32,4 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifndef __INIT_VENDOR__H__
+ #define __INIT_VENDOR__H__
+ extern void vendor_load_properties(void);
+-extern int vendor_handle_control_message(const std::string& msg, const std::string& name);
+ #endif /* __INIT_VENDOR__H__ */
+diff --git a/libziparchive/zip_archive.cc b/libziparchive/zip_archive.cc
+index 49097ce..cde75c1 100644
+--- a/libziparchive/zip_archive.cc
++++ b/libziparchive/zip_archive.cc
+@@ -819,28 +819,7 @@ class FileWriter : public Writer {
+       return nullptr;
+     }
+ 
+-    int result = 0;
+-#if defined(__linux__)
+-    if (declared_length > 0) {
+-      // Make sure we have enough space on the volume to extract the compressed
+-      // entry. Note that the call to ftruncate below will change the file size but
+-      // will not allocate space on disk and this call to fallocate will not
+-      // change the file size.
+-      // Note: fallocate is only supported by the following filesystems -
+-      // btrfs, ext4, ocfs2, and xfs. Therefore fallocate might fail with
+-      // EOPNOTSUPP error when issued in other filesystems.
+-      // Hence, check for the return error code before concluding that the
+-      // disk does not have enough space.
+-      result = TEMP_FAILURE_RETRY(fallocate(fd, 0, current_offset, declared_length));
+-      if (result == -1 && errno == ENOSPC) {
+-        ALOGW("Zip: unable to allocate space for file to %" PRId64 ": %s",
+-              static_cast<int64_t>(declared_length + current_offset), strerror(errno));
+-        return std::unique_ptr<FileWriter>(nullptr);
+-      }
+-    }
+-#endif  // __linux__
+-
+-    result = TEMP_FAILURE_RETRY(ftruncate(fd, declared_length + current_offset));
++    int result = TEMP_FAILURE_RETRY(ftruncate(fd, declared_length + current_offset));
+     if (result == -1) {
+       ALOGW("Zip: unable to truncate file to %" PRId64 ": %s",
+             static_cast<int64_t>(declared_length + current_offset), strerror(errno));
+diff --git a/mkbootimg/mkbootimg b/mkbootimg/mkbootimg
+index 5b3b793..9e38da1 100644
+--- a/mkbootimg/mkbootimg
++++ b/mkbootimg/mkbootimg
+@@ -38,7 +38,7 @@ def update_sha(sha, f):
+         sha.update(pack('I', filesize(f)))
+     else:
+         sha.update(pack('I', 0))
+-
++	
+ 
+ def pad_file(f, padding):
+     pad = (padding - (f.tell() & (padding - 1))) & (padding - 1)
+@@ -46,18 +46,20 @@ def pad_file(f, padding):
+ 
+ 
+ def write_header(args):
++    mtk_size = 512 if args.mtk is not None else 0
++
+     BOOT_MAGIC = 'ANDROID!'.encode()
+     args.output.write(pack('8s', BOOT_MAGIC))
+     args.output.write(pack('10I',
+-        filesize(args.kernel),                          # size in bytes
++        filesize(args.kernel)) + mtk_size,              # size in bytes
+         args.base + args.kernel_offset,                 # physical load addr
+-        filesize(args.ramdisk),                         # size in bytes
++        filesize(args.ramdisk)) + mtk_size,             # size in bytes
+         args.base + args.ramdisk_offset,                # physical load addr
+-        filesize(args.second),                          # size in bytes
++        filesize(args.second)) + mtk_size,              # size in bytes
+         args.base + args.second_offset,                 # physical load addr
+         args.base + args.tags_offset,                   # physical addr for kernel tags
+         args.pagesize,                                  # flash page size we assume
+-        filesize(args.dt),                              # size in bytes
++        filesize(args.dt)) + mtk_size,                  # size in bytes
+         (args.os_version << 11) | args.os_patch_level)) # os version and patch level
+     args.output.write(pack('16s', args.board.encode())) # asciiz product name
+     args.output.write(pack('512s', args.cmdline[:512].encode()))
+@@ -90,9 +92,16 @@ class ValidateStrLenAction(Action):
+         setattr(namespace, self.dest, values)
+ 
+ 
+-def write_padded_file(f_out, f_in, padding):
++def write_padded_file(f_out, f_in, padding, is_mtk=False, mtk_id=''):
+     if f_in is None:
+         return
++
++    if is_mtk:
++        mtk_hdr = pack('<II32s', 0x58881688, filesize(f_in), mtk_id.encode())
++        mtk_hdr_pad = b'\xff' * (512 - len(mtk_hdr))
++        f_out.write(mtk_hdr)
++        f_out.write(mtk_hdr_pad)
++
+     f_out.write(f_in.read())
+     pad_file(f_out, padding)
+ 
+@@ -154,14 +163,18 @@ def parse_cmdline():
+     parser.add_argument('--dt', help='path to the device tree image', type=FileType('rb'))
+     parser.add_argument('-o', '--output', help='output file name', type=FileType('wb'),
+                         required=True)
++    parser.add_argument('--mtk', help='MTK flavor of image to create', default=None,
++                        choices=['boot', 'recovery', ])
+     return parser.parse_args()
+ 
+ 
+ def write_data(args):
+-    write_padded_file(args.output, args.kernel, args.pagesize)
+-    write_padded_file(args.output, args.ramdisk, args.pagesize)
+-    write_padded_file(args.output, args.second, args.pagesize)
+-    write_padded_file(args.output, args.dt, args.pagesize)
++    is_mtk = args.mtk is not None
++    ramdisk_id = 'ROOTFS' if args.mtk == 'boot' else 'RECOVERY'
++    write_padded_file(args.output, args.kernel, args.pagesize, is_mtk, 'KERNEL')
++    write_padded_file(args.output, args.ramdisk, args.pagesize, is_mtk, ramdisk_id)
++    write_padded_file(args.output, args.second, args.pagesize, is_mtk, '')
++    write_padded_file(args.output, args.dt, args.pagesize, is_mtk, '')
+ 
+ 
+ def main():
+diff --git a/mkbootimg/unpackbootimg b/mkbootimg/unpackbootimg
+index b5dc663..2e408e6 100644
+--- a/mkbootimg/unpackbootimg
++++ b/mkbootimg/unpackbootimg
+@@ -112,6 +112,8 @@ def parse_cmdline():
+     parser.add_argument('-o', '--output', help='output directory', default='./')
+     parser.add_argument('--pagesize', help='page size', type=parse_int,
+                         choices=[2**i for i in range(11,18)], default=0)
++    parser.add_argument('--mtk', help='skip MTK header if present', type=parse_int,
++                        choices=[1], default=0)
+     return parser.parse_args()
+ 
+ def seek_padding(f, size, pagesize):
+@@ -122,8 +124,17 @@ def seek_padding(f, size, pagesize):
+ 
+ def write_input_to_file(args, filename, size):
+     with open(filename, 'wb') as f_out:
++        if args.mtk:
++            # skip MTK header if present
++            maybe_mtk_magic = args.input.read(4)
++            if maybe_mtk_magic == '\x88\x16\x88\x58':
++                # skip rest of MTK header
++                args.input.seek(512 - 4, 1)
++                size -= 512
++            else:
++                args.input.seek(-4, 1)
+         f_out.write(args.input.read(size))
+-
++	
+     seek_padding(args.input, size, args.pagesize)
+ 
+ def fix_ramdisk_extension(filename):
+diff --git a/rootdir/init.usb.rc b/rootdir/init.usb.rc
+index 915d159..0666e4d 100644
+--- a/rootdir/init.usb.rc
++++ b/rootdir/init.usb.rc
+@@ -15,7 +15,7 @@ on post-fs-data
+ service adbd /sbin/adbd --root_seclabel=u:r:su:s0
+     class core
+     socket adbd stream 660 system system
+-    disabled
++    #disabled
+     seclabel u:r:adbd:s0
+ 
+ # adbd on at boot in emulator
+-- 
+2.13.0.windows.1
+
+diff --git a/liblog/logger_write.c b/liblog/logger_write.c
+index c7b5a84..6184e04 100644
+--- a/liblog/logger_write.c
++++ b/liblog/logger_write.c
+@@ -401,6 +401,7 @@ LIBLOG_ABI_PUBLIC int __android_log_buf_write(int bufID, int
+         !strncmp(tag, "IMS", 3) || /* Any log tag with "IMS" as the prefix */
+         !strcmp(tag, "AT") ||
+         !strcmp(tag, "GSM") ||
++        !strcmp(tag, "ccci_fsd") ||
+         !strcmp(tag, "STK") ||
+         !strcmp(tag, "CDMA") ||
+         !strcmp(tag, "PHONE") ||
+

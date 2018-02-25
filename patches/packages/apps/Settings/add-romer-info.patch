@@ -1,0 +1,117 @@
+From 2b00f3256426a27f23c1cef97279ab57a314c9e1 Mon Sep 17 00:00:00 2001
+From: 67891abc <1768300180abc@gmail.com>
+Date: Thu, 5 Oct 2017 02:20:29 +0800
+Subject: [PATCH] [TEST] Add Romer Info to about device screen.
+
+---
+ res/values/67891abc_strings.xml                                        |  9 +++++++++
+ res/xml/device_info_settings.xml                                       |  8 ++++++++
+ src/com/android/settings/DeviceInfoSettings.java                       |  2 ++
+ src/com/android/settings/deviceinfo/RomerInfoPreferenceController.java | 40 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 59 insertions(+)
+ create mode 100644 res/values/67891abc_strings.xml
+ create mode 100644 src/com/android/settings/deviceinfo/RomerInfoPreferenceController.java
+
+diff --git a/res/values/67891abc_strings.xml b/res/values/67891abc_strings.xml
+new file mode 100644
+index 0000000..641a507
+--- /dev/null
++++ b/res/values/67891abc_strings.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++
++<!-- The custom string is powered by 67891abc -->
++
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <!-- About phone screen, Romer Info -->
++    <string name="romer_info">Romer Info</string>
++    <string name="romer_info_default">67891abc</string>
++</resources>
+diff --git a/res/xml/device_info_settings.xml b/res/xml/device_info_settings.xml
+index 1b594ef..80f4f6d 100644
+--- a/res/xml/device_info_settings.xml
++++ b/res/xml/device_info_settings.xml
+@@ -67,6 +67,14 @@
+                 android:title="@string/firmware_version"
+                 android:summary="@string/device_info_default"/>
+ 
++	<!-- Romer Info -->
++        <Preference android:key="romer_info"
++                android:title="@string/romer_info"
++                android:summary="@string/romer_info_default">
++		<intent android:action="android.intent.action.VIEW"
++                        android:data="https://weibo.com/u/3516970894/" />
++        </Preference>
++
+         <!-- Security patch level -->
+         <Preference android:key="security_patch"
+                 android:title="@string/security_patch"
+diff --git a/src/com/android/settings/DeviceInfoSettings.java b/src/com/android/settings/DeviceInfoSettings.java
+index 4a9c197..1e428f4 100644
+--- a/src/com/android/settings/DeviceInfoSettings.java
++++ b/src/com/android/settings/DeviceInfoSettings.java
+@@ -36,6 +36,7 @@ import com.android.settings.deviceinfo.FirmwareVersionPreferenceController;
+ import com.android.settings.deviceinfo.KernelVersionPreferenceController;
+ import com.android.settings.deviceinfo.ManualPreferenceController;
+ import com.android.settings.deviceinfo.RegulatoryInfoPreferenceController;
++import com.android.settings.deviceinfo.RomerInfoPreferenceController;
+ import com.android.settings.deviceinfo.SELinuxStatusPreferenceController;
+ import com.android.settings.deviceinfo.SafetyInfoPreferenceController;
+ import com.android.settings.deviceinfo.SecurityPatchPreferenceController;
+@@ -125,6 +126,7 @@ public class DeviceInfoSettings extends DashboardFragment implements Indexable {
+         controllers.add(new FirmwareVersionPreferenceController(context, lifecycle));
+         controllers.add(new RegulatoryInfoPreferenceController(context));
+         controllers.add(new DeviceModelPreferenceController(context, fragment));
++	 controllers.add(new RomerInfoPreferenceController(context));
+         controllers.add(new SecurityPatchPreferenceController(context));
+         controllers.add(new FccEquipmentIdPreferenceController(context));
+         controllers.add(new SELinuxStatusPreferenceController(context));
+diff --git a/src/com/android/settings/deviceinfo/RomerInfoPreferenceController.java b/src/com/android/settings/deviceinfo/RomerInfoPreferenceController.java
+new file mode 100644
+index 0000000..c974f0d
+--- /dev/null
++++ b/src/com/android/settings/deviceinfo/RomerInfoPreferenceController.java
+@@ -0,0 +1,40 @@
++/*
++ * The java file is created by 67891abc
++ */
++
++package com.android.settings.deviceinfo;
++
++import android.content.Context;
++import android.os.SystemProperties;
++import android.support.v7.preference.Preference;
++
++import com.android.settings.R;
++import com.android.settings.Utils;
++import com.android.settings.core.PreferenceController;
++
++public class RomerInfoPreferenceController extends PreferenceController {
++
++    private static final String KEY_ROMER_INFO = "romer_info";
++    private static final String KEY_ROMER_INFO_PROP = "ro.sys.romer";
++
++    public RomerInfoPreferenceController(Context context) {
++        super(context);
++    }
++
++    @Override
++    public boolean isAvailable() {
++        return true;
++    }
++
++    @Override
++    public String getPreferenceKey() {
++        return KEY_ROMER_INFO;
++    }
++
++    @Override
++    public void updateState(Preference preference) {
++        super.updateState(preference);
++        preference.setSummary(SystemProperties.get(KEY_ROMER_INFO_PROP,
++                mContext.getResources().getString(R.string.romer_info_default)));
++    }
++}
+--
+libgit2 0.25.0
+

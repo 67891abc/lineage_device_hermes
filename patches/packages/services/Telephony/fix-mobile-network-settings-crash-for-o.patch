@@ -1,0 +1,83 @@
+From 4de9fc3eb0a3436fa33f7be6da993f6cc94821da Mon Sep 17 00:00:00 2001
+From: Wei Huang <wei.x.huang@sony.com>
+Date: Tue, 9 May 2017 23:36:35 +0900
+Subject: [PATCH] Fix MobileNetworkSettings crash for multi-SIM device
+
+Crash happens when view of MobileNetworkSettings activity is updated
+from view for id R.layout.network_setting to view for
+id R.layout.common_tab_settings if two SIMs are inserted into multi-SIM
+device. Because view for id R.id.network_setting_content is not found.
+View for id R.id.network_setting_content must be present for
+MobileNetworkFragment.
+
+To avoid this illegal state, inflate view for
+id R.layout.common_tab_settings to MobileNetworkFragment.
+
+Test: manual - Checked that the Mobile network settings can be
+displayed when two SIMs are inserted
+Bug: 63127781
+
+Change-Id: I2e88d7cbe9f889305d4ac796c2bf9f395374da7d
+---
+ src/com/android/phone/MobileNetworkSettings.java | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/src/com/android/phone/MobileNetworkSettings.java b/src/com/android/phone/MobileNetworkSettings.java
+index 2d8ba6d..bc233f7 100644
+--- a/src/com/android/phone/MobileNetworkSettings.java
++++ b/src/com/android/phone/MobileNetworkSettings.java
+@@ -47,8 +47,10 @@ import android.telephony.SubscriptionManager;
+ import android.telephony.TelephonyManager;
+ import android.text.TextUtils;
+ import android.util.Log;
++import android.view.LayoutInflater;
+ import android.view.MenuItem;
+ import android.view.View;
++import android.view.ViewGroup;
+ import android.widget.TabHost;
+ 
+ import com.android.ims.ImsManager;
+@@ -315,8 +317,6 @@ public class MobileNetworkSettings extends Activity  {
+                     if (DBG) log("initializeSubscriptions: UPDATE");
+                     currentTab = mTabHost != null ? mTabHost.getCurrentTab() : 0;
+ 
+-                    getActivity().setContentView(com.android.internal.R.layout.common_tab_settings);
+-
+                     mTabHost = (TabHost) getActivity().findViewById(android.R.id.tabhost);
+                     mTabHost.setup();
+ 
+@@ -355,7 +355,6 @@ public class MobileNetworkSettings extends Activity  {
+                         mTabHost.clearAllTabs();
+                         mTabHost = null;
+                     }
+-                    getActivity().setContentView(com.android.internal.R.layout.common_tab_settings);
+                     break;
+                 }
+                 case DO_NOTHING: {
+@@ -490,10 +489,22 @@ public class MobileNetworkSettings extends Activity  {
+                     TelephonyIntents.ACTION_RADIO_TECHNOLOGY_CHANGED);
+             getActivity().registerReceiver(mPhoneChangeReceiver, intentFilter);
+ 
+-            initializeSubscriptions();
+             Log.i(LOG_TAG, "onCreate:-");
+         }
+ 
++        @Override
++        public View onCreateView(LayoutInflater inflater, ViewGroup container,
++                Bundle savedInstanceState) {
++            return inflater.inflate(com.android.internal.R.layout.common_tab_settings,
++                    container, false);
++        }
++
++        @Override
++        public void onActivityCreated(Bundle savedInstanceState) {
++            super.onActivityCreated(savedInstanceState);
++            initializeSubscriptions();
++        }
++
+         private class PhoneChangeReceiver extends BroadcastReceiver {
+             @Override
+             public void onReceive(Context context, Intent intent) {
+--
+libgit2 0.25.0
+
