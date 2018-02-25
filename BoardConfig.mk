@@ -206,8 +206,8 @@ TARGET_RECOVERY_PIXEL_FORMAT := "RGBA_8888"
 TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
 # SELinux
-#BOARD_SEPOLICY_DIRS := \
-#    device/xiaomi/herems/sepolicy
+BOARD_SEPOLICY_DIRS := \
+    device/xiaomi/herems/sepolicy
 
 # Seccomp Filter
 BOARD_SECCOMP_POLICY := \

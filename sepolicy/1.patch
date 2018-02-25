@@ -1,0 +1,1688 @@
+From 43e2802e46038ac03c33695a03f1391b8894d6e1 Mon Sep 17 00:00:00 2001
+From: vishalk17 <vishalkapadi95@gmail.com>
+Date: Sun, 15 Oct 2017 21:06:36 +0000
+Subject: [PATCH] import sepolicy changes for oreo
+
+---
+ sepolicy/adbd.te                  |   4 ++--
+ sepolicy/atci_service.te          |   2 --
+ sepolicy/bluetooth.te             |   9 ++++++++-
+ sepolicy/bootanim.te              |   3 +++
+ sepolicy/br_app_data_service.te   |  27 ++++++++++++++++-----------
+ sepolicy/cameraserver.te          |   0
+ sepolicy/ccci_mdinit.te           |  31 +++++++++++++++++++++++++++++++
+ sepolicy/debuggerd.te             | 213 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ sepolicy/device.te                |   2 +-
+ sepolicy/dex2oat.te               |   2 +-
+ sepolicy/dhcp.te                  |   4 ++--
+ sepolicy/dmlog.te                 |   4 ++--
+ sepolicy/domain.te                |   6 +++---
+ sepolicy/drmserver.te             |  12 +-----------
+ sepolicy/emdlogger.te             |   2 +-
+ sepolicy/enableswap.te            |   2 +-
+ sepolicy/factory.te               |   2 +-
+ sepolicy/file.te                  |   1 -
+ sepolicy/file_contexts            |  11 +++++------
+ sepolicy/fingerprintd.te          |   7 +++++++
+ sepolicy/fs_use                   |   2 +-
+ sepolicy/gsm0710muxdmd2.te        |  46 ----------------------------------------------
+ sepolicy/guiext-server.te         |  13 ++++++++-----
+ sepolicy/hal_audio_default.te     |   8 ++++++++
+ sepolicy/hal_bluetooth_default.te |   6 ++++++
+ sepolicy/hal_camera_default.te    |  16 ++++++++++++++++
+ sepolicy/hal_sensors_default.te   |   4 ++++
+ sepolicy/hal_wifi_default.te      |   4 ++++
+ sepolicy/hotknot_native.te        |   5 +++--
+ sepolicy/icusbd.te                |   2 +-
+ sepolicy/init.te                  |   6 +++---
+ sepolicy/install_recovery.te      |   2 +-
+ sepolicy/installd.te              |   8 ++++++--
+ sepolicy/isolated_app.te          |   2 +-
+ sepolicy/kernel.te                |   5 ++++-
+ sepolicy/logd.te                  |   5 -----
+ sepolicy/mdlogger.te              |   2 +-
+ sepolicy/mediacodec.te            |   6 +++++-
+ sepolicy/mediaserver.te           |   9 ++++++++-
+ sepolicy/meta_tst.te              |   6 +++---
+ sepolicy/mnld.te                  |  16 ++++++++++++----
+ sepolicy/mobicore.te              |   5 ++++-
+ sepolicy/mobile_log_d.te          |   4 ++--
+ sepolicy/mtk_agpsd.te             |   4 ++--
+ sepolicy/mtkmal.te                |  10 +++++-----
+ sepolicy/mtkrild.te               |  10 +++++-----
+ sepolicy/netd.te                  |  12 ++++++++----
+ sepolicy/netdiag.te               |   0
+ sepolicy/nfc.te                   | 100 ----------------------------------------------------------------------------------------------------
+ sepolicy/nvram_agent_binder.te    |   4 ++--
+ sepolicy/nvram_daemon.te          |  16 +++++++++++-----
+ sepolicy/platform_app.te          |   9 ++-------
+ sepolicy/ppp.te                   |   2 +-
+ sepolicy/priv_app.te              |   5 ++++-
+ sepolicy/program_binary.te        |   1 +
+ sepolicy/property.te              |   6 ++++++
+ sepolicy/radio.te                 |   8 --------
+ sepolicy/recovery.te              |  24 ++++++++++++------------
+ sepolicy/ril-3gddaemon.te         |   6 +++---
+ sepolicy/rild.te                  |   9 +++++++++
+ sepolicy/sdcardd.te               |   2 +-
+ sepolicy/shell.te                 |   6 +++---
+ sepolicy/sn.te                    |   3 +++
+ sepolicy/surfaceflinger.te        |  18 ++++++++++++------
+ sepolicy/sysinit.te               |   3 ++-
+ sepolicy/system_app.te            |   8 +++++---
+ sepolicy/system_server.te         |  24 ++++++++----------------
+ sepolicy/teei_daemon.te           |   2 +-
+ sepolicy/toolbox.te               |   4 ++--
+ sepolicy/tunman.te                |   2 +-
+ sepolicy/ueventd.te               |   2 +-
+ sepolicy/uncrypt.te               |   5 ++++-
+ sepolicy/usbdongled.te            |   6 +++---
+ sepolicy/viarild.te               |   8 ++++----
+ sepolicy/vold.te                  |  26 +++++++++++++++++++-------
+ sepolicy/wpa.te                   |  15 ---------------
+ sepolicy/zygote.te                |  15 +++++++++------
+ 78 files changed, 338 insertions(+), 566 deletions(-)
+ mode change 100755 => 100644 sepolicy/bluetooth.te
+ mode change 100755 => 100644 sepolicy/cameraserver.te
+ mode change 100755 => 100644 sepolicy/ccci_mdinit.te
+ delete mode 100755 sepolicy/debuggerd.te
+ mode change 100755 => 100644 sepolicy/device.te
+ mode change 100755 => 100644 sepolicy/dex2oat.te
+ mode change 100755 => 100644 sepolicy/dhcp.te
+ mode change 100755 => 100644 sepolicy/dmlog.te
+ mode change 100755 => 100644 sepolicy/domain.te
+ mode change 100755 => 100644 sepolicy/drmserver.te
+ mode change 100755 => 100644 sepolicy/emdlogger.te
+ mode change 100755 => 100644 sepolicy/enableswap.te
+ mode change 100755 => 100644 sepolicy/factory.te
+ mode change 100755 => 100644 sepolicy/file.te
+ mode change 100755 => 100644 sepolicy/file_contexts
+ mode change 100755 => 100644 sepolicy/fs_use
+ delete mode 100755 sepolicy/gsm0710muxdmd2.te
+ mode change 100755 => 100644 sepolicy/guiext-server.te
+ create mode 100644 sepolicy/hal_audio_default.te
+ create mode 100644 sepolicy/hal_bluetooth_default.te
+ create mode 100644 sepolicy/hal_camera_default.te
+ create mode 100644 sepolicy/hal_sensors_default.te
+ create mode 100644 sepolicy/hal_wifi_default.te
+ mode change 100755 => 100644 sepolicy/hotknot_native.te
+ mode change 100755 => 100644 sepolicy/icusbd.te
+ mode change 100755 => 100644 sepolicy/install_recovery.te
+ mode change 100755 => 100644 sepolicy/installd.te
+ mode change 100755 => 100644 sepolicy/isolated_app.te
+ mode change 100755 => 100644 sepolicy/kernel.te
+ mode change 100755 => 100644 sepolicy/mdlogger.te
+ mode change 100755 => 100644 sepolicy/meta_tst.te
+ mode change 100755 => 100644 sepolicy/mobicore.te
+ mode change 100755 => 100644 sepolicy/mobile_log_d.te
+ mode change 100755 => 100644 sepolicy/mtkmal.te
+ mode change 100755 => 100644 sepolicy/mtkrild.te
+ mode change 100755 => 100644 sepolicy/netd.te
+ mode change 100755 => 100644 sepolicy/netdiag.te
+ delete mode 100755 sepolicy/nfc.te
+ mode change 100755 => 100644 sepolicy/nvram_agent_binder.te
+ mode change 100755 => 100644 sepolicy/nvram_daemon.te
+ mode change 100755 => 100644 sepolicy/ppp.te
+ mode change 100755 => 100644 sepolicy/program_binary.te
+ mode change 100755 => 100644 sepolicy/property.te
+ mode change 100755 => 100644 sepolicy/recovery.te
+ mode change 100755 => 100644 sepolicy/ril-3gddaemon.te
+ mode change 100755 => 100644 sepolicy/rild.te
+ mode change 100755 => 100644 sepolicy/sdcardd.te
+ mode change 100755 => 100644 sepolicy/shell.te
+ mode change 100755 => 100644 sepolicy/sn.te
+ mode change 100755 => 100644 sepolicy/surfaceflinger.te
+ mode change 100755 => 100644 sepolicy/system_app.te
+ mode change 100755 => 100644 sepolicy/system_server.te
+ mode change 100755 => 100644 sepolicy/teei_daemon.te
+ mode change 100755 => 100644 sepolicy/toolbox.te
+ mode change 100755 => 100644 sepolicy/tunman.te
+ mode change 100755 => 100644 sepolicy/uncrypt.te
+ mode change 100755 => 100644 sepolicy/usbdongled.te
+ mode change 100755 => 100644 sepolicy/viarild.te
+ delete mode 100755 sepolicy/wpa.te
+ mode change 100755 => 100644 sepolicy/zygote.te
+
+diff --git a/sepolicy/adbd.te b/sepolicy/adbd.te
+index 20ef4b6..29e6282 100755
+--- a/sepolicy/adbd.te
++++ b/sepolicy/adbd.te
+@@ -18,8 +18,8 @@ allow adbd graphics_device:chr_file { read ioctl open };
+ # Date : WK14.27
+ # Operation : KK.AOSP SQC
+ # Purpose : A process wants to access a specific path. For example : shell:ls -l /data/data/
+-allow adbd platform_app_data_file:dir { write getattr add_name };
+-allow adbd platform_app_data_file:file { read create open };
++#allow adbd platform_app_data_file:dir { write getattr add_name };
++#allow adbd platform_app_data_file:file { read create open };
+ allow adbd radio_data_file:file { read open };
+ 
+ # Date : WK14.27
+diff --git a/sepolicy/atci_service.te b/sepolicy/atci_service.te
+index 61b6266..73cbfa9 100755
+--- a/sepolicy/atci_service.te
++++ b/sepolicy/atci_service.te
+@@ -51,8 +51,6 @@ allow atci_service atci_data_file:sock_file write;
+ allow atci_service misc2_device:chr_file { open read write };
+ allow atci_service mmcblk0_block_device:blk_file { open read write };
+ allow atci_service mt6605_device:chr_file { read write ioctl open getattr };
+-allow atci_service nfc_socket:dir { write add_name remove_name search };
+-allow atci_service nfc_socket:sock_file { create write unlink setattr };
+ allow atci_service system_file:file execute_no_trans;
+ 
+ allow atci_service self:capability { dac_read_search dac_override net_raw chown fsetid sys_nice net_admin fowner sys_admin };
+diff --git a/sepolicy/bluetooth.te b/sepolicy/bluetooth.te
+old mode 100755
+new mode 100644
+index 72e47ab..854afc9
+--- a/sepolicy/bluetooth.te
++++ b/sepolicy/bluetooth.te
+@@ -17,10 +17,17 @@ allow bluetooth block_device:dir search;
+ allow bluetooth proc_secmem:file { read open };
+ 
+ # Temp FS access
+-allow bluetooth platform_app_tmpfs:file write;
++#allow bluetooth platform_app_tmpfs:file write;
+ 
+ # Date : WK15.36
+ # Operation : Migration
+ # Purpose: Allow bluetooth to access surfaceflinger
+ allow bluetooth surfaceflinger:fifo_file { read write };
+ allow bluetooth bt_prop:file { getattr open read }; 
++
++# boot_mode 
++allow bluetooth sysfs_boot_mode:file r_file_perms; 
++
++# 2017/7/22: daniel_hk(danielhk@github.com)
++# O
++allow bluetooth wmt_prop:file { getattr open };
+diff --git a/sepolicy/bootanim.te b/sepolicy/bootanim.te
+index cf65a25..f8ebb4c 100755
+--- a/sepolicy/bootanim.te
++++ b/sepolicy/bootanim.te
+@@ -55,3 +55,6 @@ allow bootanim rootfs:lnk_file { getattr };
+ # Purpose : RGX 1.5 DDK requires client to have fifo permission
+ allow bootanim surfaceflinger:fifo_file rw_file_perms;
+ 
++# dev_info 
++allow bootanim sysfs_devinfo:file r_file_perms; 
++
+diff --git a/sepolicy/br_app_data_service.te b/sepolicy/br_app_data_service.te
+index d48873b..1dd7599 100755
+--- a/sepolicy/br_app_data_service.te
++++ b/sepolicy/br_app_data_service.te
+@@ -14,15 +14,20 @@ type br_app_data_service ,domain;
+ init_daemon_domain(br_app_data_service)
+ 
+ #============= br_app_data_service ==============
+-allow br_app_data_service app_data_file:dir create_dir_perms;
++#allow br_app_data_service app_data_file:dir create_dir_perms;
+ allow br_app_data_service self:capability { chown dac_override };
+-allow br_app_data_service app_data_file:file create_file_perms;
+-allow br_app_data_service app_data_file:dir { search open };
+-allow br_app_data_service app_data_file:lnk_file getattr;
+-allow br_app_data_service system_data_file:dir write;
+-allow br_app_data_service app_data_file:lnk_file unlink;
+-allow br_app_data_service system_data_file:dir remove_name;
++#allow br_app_data_service app_data_file:file create_file_perms;
++#allow br_app_data_service app_data_file:dir { search open };
++#allow br_app_data_service app_data_file:lnk_file getattr;
++#allow br_app_data_service system_data_file:dir write;
++#allow br_app_data_service app_data_file:lnk_file unlink;
++#allow br_app_data_service system_data_file:dir remove_name;
+ typeattribute br_app_data_service mlstrustedsubject;
++#allow br_app_data_service radio_data_file:dir { read getattr search open };
++#allow br_app_data_service radio_data_file:dir create_dir_perms;
++#allow br_app_data_service radio_data_file:file create_file_perms;
++#allow br_app_data_service radio_data_file:lnk_file { getattr unlink };
++
+ #================================================
+ #add for chmod
+ allow br_app_data_service self:capability fowner;
+@@ -30,7 +35,7 @@ allow br_app_data_service self:capability fsetid;
+ 
+ #==================================================
+ #setfilecon for selinux
+-allow br_app_data_service app_data_file:dir relabelfrom;
+-allow br_app_data_service app_data_file:dir relabelto;
+-allow br_app_data_service app_data_file:file relabelfrom;
+-allow br_app_data_service app_data_file:file relabelto;
++#allow br_app_data_service app_data_file:dir relabelfrom;
++#allow br_app_data_service app_data_file:dir relabelto;
++#allow br_app_data_service app_data_file:file relabelfrom;
++#allow br_app_data_service app_data_file:file relabelto;
+diff --git a/sepolicy/cameraserver.te b/sepolicy/cameraserver.te
+old mode 100755
+new mode 100644
+diff --git a/sepolicy/device.te b/sepolicy/device.te
+old mode 100755
+new mode 100644
+index 1ef7c83..bdc1755
+--- a/sepolicy/device.te
++++ b/sepolicy/device.te
+@@ -149,7 +149,7 @@ type md32_device, dev_type;
+ type scp_device, dev_type;
+ type etb_device, dev_type;
+ type MT_pmic_adc_cali_device, dev_type;
+-type mtk-adc-cali_device, dev_type;
++type mtk_adc_cali_device, dev_type;
+ type MT_pmic_cali_device,dev_type;
+ type barometer_device,dev_type;
+ type humidity_device,dev_type;
+diff --git a/sepolicy/dex2oat.te b/sepolicy/dex2oat.te
+old mode 100755
+new mode 100644
+index 0849556..018f2f9
+--- a/sepolicy/dex2oat.te
++++ b/sepolicy/dex2oat.te
+@@ -26,4 +26,4 @@ allow dex2oat platform_app:fd use;
+ # Date : WK15.04
+ # Operation : MTBF Test
+ # Purpose : for K35V1_64_OP02 project MTBF test (ALPS01920449)
+-allow dex2oat platform_app_tmpfs:file write;
++#allow dex2oat platform_app_tmpfs:file write;
+diff --git a/sepolicy/dhcp.te b/sepolicy/dhcp.te
+old mode 100755
+new mode 100644
+index d36de1d..fb7b7f0
+--- a/sepolicy/dhcp.te
++++ b/sepolicy/dhcp.te
+@@ -21,7 +21,7 @@ allow dhcp kernel:system module_request;
+ # Purpose: ALPS01798575 
+ #============= netd ==============
+ allow dhcp platform_app:fd use;
+-allow dhcp platform_app_tmpfs:file write;
++#allow dhcp platform_app_tmpfs:file write;
+ 
+ #============= dhcp ==============
+ allow dhcp init:fifo_file { read write };
+@@ -29,4 +29,4 @@ allow dhcp init:unix_stream_socket { read write };
+ 
+ 
+ #============= dhcp ==============
+-allow dhcp untrusted_app:fd use;
+\ No newline at end of file
++allow dhcp untrusted_app:fd use;
+diff --git a/sepolicy/dmlog.te b/sepolicy/dmlog.te
+old mode 100755
+new mode 100644
+index 6dfb53c..f72a5b7
+--- a/sepolicy/dmlog.te
++++ b/sepolicy/dmlog.te
+@@ -20,8 +20,8 @@ init_daemon_domain(dmlog)
+ # Operation : Migration 
+ # Purpose : for mtk debug mechanism
+ allow dmlog aed_device:chr_file read;
+-allow dmlog debuggerd:fd use;
+-allow dmlog debuggerd:unix_stream_socket { read write };
++#allow dmlog debuggerd:fd use;
++#allow dmlog debuggerd:unix_stream_socket { read write };
+ allow dmlog expdb_device:chr_file { read write };
+ allow dmlog fuse:file { write getattr };
+ allow dmlog sysfs:file write;
+diff --git a/sepolicy/domain.te b/sepolicy/domain.te
+old mode 100755
+new mode 100644
+index 90e2506..9bf74b8
+--- a/sepolicy/domain.te
++++ b/sepolicy/domain.te
+@@ -10,9 +10,9 @@ allow domain exm0_device:chr_file { read write ioctl open };
+ # Date : WK15.29
+ # Operation : Migration
+ # Purpose : for device bring up, not to block early migration
+-allow domain log_device:dir search;
+-allow domain log_device:chr_file {open write};
+-allow domain storage_file:dir search;
++#allow domain log_device:dir search;
++#allow domain log_device:chr_file {open write};
++#allow domain storage_file:dir search;
+ 
+ # Fingerprint
+ allow domain McDriverDaemon_device:chr_file rw_file_perms;
+diff --git a/sepolicy/drmserver.te b/sepolicy/drmserver.te
+old mode 100755
+new mode 100644
+index fba28ea..27e22f0
+--- a/sepolicy/drmserver.te
++++ b/sepolicy/drmserver.te
+@@ -71,7 +71,7 @@ allow drmserver proc_secmem:file { read write ioctl open };
+ # Date : WK15.07
+ # Operation : DRM SQC
+ # Purpose : For gmo project, low memory kill
+-allow drmserver platform_app_tmpfs:file write;
++#allow drmserver platform_app_tmpfs:file write;
+ 
+ # Date : WK15.15
+ # Operation : GMS APP SQC
+@@ -115,13 +115,3 @@ allow drmserver system_app_data_file:file read;
+ # Purpose : allow drmserver access file stored in sdcard like /mnt/media_rw/
+ allow drmserver vfat:file open;
+ allow drmserver mnt_media_rw_file:dir search;
+-
+-# Add by : Jackie
+-# Date : WK15.44
+-# Operation : Migration
+-# Purpose : allow drmserver access nfc process info, because drmserver need
+-# check whether calling process is granted process, it need get process name
+-# with calling pid
+-allow drmserver nfc:dir search;
+-allow drmserver nfc:file { read getattr open };
+-
+diff --git a/sepolicy/emdlogger.te b/sepolicy/emdlogger.te
+old mode 100755
+new mode 100644
+index bf7e8c1..a0ed8fb
+--- a/sepolicy/emdlogger.te
++++ b/sepolicy/emdlogger.te
+@@ -91,7 +91,7 @@ allow emdlogger vfat:file create_file_perms;
+ #=========================================================
+ #modem logger permission in storage in android M version
+ #=========================================================
+-allow emdlogger log_device:chr_file { write open };
++#allow emdlogger log_device:chr_file { write open };
+ allow emdlogger mnt_user_file:dir search;
+ allow emdlogger mnt_user_file:lnk_file read;
+ #allow emdlogger storage_file:dir search;
+diff --git a/sepolicy/enableswap.te b/sepolicy/enableswap.te
+old mode 100755
+new mode 100644
+index 24eec77..f86fbc0
+--- a/sepolicy/enableswap.te
++++ b/sepolicy/enableswap.te
+@@ -55,7 +55,7 @@ allow enableswap self:capability dac_override;
+ # Date : WK15.30
+ # Operation : Migration
+ # Purpose : Allow more operations on init_tmpfs
+-allow enableswap init_tmpfs:file { open write };
++#allow enableswap init_tmpfs:file { open write };
+ 
+ # Nougat
+ allow enableswap shell_exec:file { entrypoint read getattr };
+diff --git a/sepolicy/factory.te b/sepolicy/factory.te
+old mode 100755
+new mode 100644
+index 626ef31..0bc51e2
+--- a/sepolicy/factory.te
++++ b/sepolicy/factory.te
+@@ -56,7 +56,7 @@ allow factory mtk_kpd_device:chr_file { read ioctl open };
+ allow factory ebc_device:chr_file { read write open };
+ allow factory fm_device:chr_file { read write ioctl open };
+ allow factory fuse:dir { read search open };
+-allow factory gps_device:chr_file { read write open };
++#allow factory gps_device:chr_file { read write open };
+ allow factory graphics_device:chr_file { read write ioctl open };
+ allow factory gsensor_device:chr_file { read ioctl open };
+ allow factory gsm0710muxd_device:chr_file { read write ioctl open };
+diff --git a/sepolicy/file.te b/sepolicy/file.te
+old mode 100755
+new mode 100644
+index bf141da..49e67d4
+--- a/sepolicy/file.te
++++ b/sepolicy/file.te
+@@ -75,7 +75,6 @@ type mnld_data_file, file_type, data_file_type;
+ type sysctl_socket, file_type;
+ 
+ type backuprestore_socket, file_type;
+-type nfc_socket, file_type;
+ 
+ type protect_f_data_file, file_type, data_file_type;
+ type protect_s_data_file, file_type, data_file_type;
+diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
+old mode 100755
+new mode 100644
+index de32f9f..bcf5cc9
+--- a/sepolicy/file_contexts
++++ b/sepolicy/file_contexts
+@@ -16,7 +16,7 @@
+ #
+ /data/aee_exp(/.*)?  u:object_r:aee_exp_data_file:s0
+ /data/agps_supl(/.*)?    u:object_r:agpsd_data_file:s0
+-/data/misc/gps(/.*)?   u:object_r:gps_data_file:s0
++#/data/misc/gps(/.*)?   u:object_r:gps_data_file:s0
+ /data/anr/SF_RTT(/.*)? u:object_r:sf_rtt_file:s0
+ /data/app/mcRegistry(/.*)? u:object_r:mobicore_data_file:s0
+ /data/ccci_cfg(/.*)? u:object_r:ccci_cfg_file:s0
+@@ -47,7 +47,6 @@
+ /data/misc/stp_dump(/.*)? u:object_r:stp_dump_data_file:s0
+ /data/misc/wide-dhcpv6(/.*)? u:object_r:wide_dhcpv6_data_file:s0
+ /data/misc/wpa_supplicant(/.*)? u:object_r:wpa_supplicant_data_file:s0
+-/data/nfc_socket(/.*)? u:object_r:nfc_socket:s0
+ /data/nvram(/.*)? u:object_r:nvram_data_file:s0
+ /data/cct(/.*)? u:object_r:cct_data_file:s0
+ /data/md3(/.*)? u:object_r:c2k_file:s0
+@@ -118,7 +117,7 @@
+ /dev/fat(/.*)? u:object_r:fat_device:s0
+ /dev/FM50AF(/.*)? u:object_r:FM50AF_device:s0
+ /dev/fm(/.*)? u:object_r:fm_device:s0
+-/dev/gps(/.*)? u:object_r:gps_device:s0
++#/dev/gps(/.*)? u:object_r:gps_device:s0
+ /dev/gsensor(/.*)? u:object_r:gsensor_device:s0
+ /dev/gyroscope(/.*)? u:object_r:gyroscope_device:s0
+ /dev/hdmitx(/.*)? u:object_r:graphics_device:s0
+@@ -165,7 +164,7 @@
+ /dev/mt9p012(/.*)? u:object_r:mt9p012_device:s0
+ /dev/mtfreqhopping(/.*)? u:object_r:mtfreqhopping_device:s0
+ /dev/mtgpio(/.*)? u:object_r:mtgpio_device:s0
+-/dev/mtk-adc-cali(/.*)? u:object_r:mtk-adc-cali_device:s0
++/dev/mtk-adc-cali(/.*)? u:object_r:mtk_adc_cali_device:s0
+ /dev/mtk_disp.* u:object_r:graphics_device:s0
+ /dev/mtkfb_vsync(/.*)? u:object_r:graphics_device:s0
+ /dev/mtkg2d(/.*)? u:object_r:mtkg2d_device:s0
+@@ -218,7 +217,7 @@
+ /dev/socket/dfo(/.*)? u:object_r:dfo_socket:s0
+ /dev/socket/dnsproxyd(/.*)? u:object_r:dnsproxyd_socket:s0
+ /dev/socket/dumpstate(/.*)? u:object_r:dumpstate_socket:s0
+-/dev/socket/installd(/.*)? u:object_r:installd_socket:s0
++#/dev/socket/installd(/.*)? u:object_r:installd_socket:s0
+ /dev/socket/mdnsd(/.*)? u:object_r:mdnsd_socket:s0
+ /dev/socket/mdns(/.*)? u:object_r:mdns_socket:s0
+ /dev/socket/mnld(/.*)? u:object_r:mnld_socket:s0
+@@ -458,7 +457,7 @@
+ /system/bin/thermal u:object_r:thermal_exec:s0
+ /system/bin/tiny_mkswap u:object_r:tiny_mkswap_exec:s0
+ /system/bin/tiny_swapon u:object_r:tiny_swapon_exec:s0
+-/system/bin/tune2fs u:object_r:tune2fs_exec:s0
++#/system/bin/tune2fs u:object_r:tune2fs_exec:s0
+ /system/bin/viarild u:object_r:viarild_exec:s0
+ /system/bin/volte_imcb u:object_r:volte_imcb_exec:s0
+ /system/bin/volte_stack u:object_r:volte_stack_exec:s0
+diff --git a/sepolicy/fingerprintd.te b/sepolicy/fingerprintd.te
+index fe9e201..0bb2ae2 100755
+--- a/sepolicy/fingerprintd.te
++++ b/sepolicy/fingerprintd.te
+@@ -1,2 +1,9 @@
++# Fingerprint device
++allow fingerprintd sysfs:file rw_file_perms;
+ allow fingerprintd fingerprintd_data_file:dir create_dir_perms;
++allow fingerprintd mobicore:unix_stream_socket connectto;
+ 
++allow fingerprintd mobicore_user_device:chr_file rw_file_perms;
++allow fingerprintd mobicore_data_file:dir search;
++allow fingerprintd mobicore_data_file:file { open read getattr };
++allow fingerprintd uhid_device:chr_file rw_file_perms;
+diff --git a/sepolicy/fs_use b/sepolicy/fs_use
+old mode 100755
+new mode 100644
+index e04b587..4122d76
+--- a/sepolicy/fs_use
++++ b/sepolicy/fs_use
+@@ -1,2 +1,2 @@
+ #Add support for ubifs
+-fs_use_xattr ubifs u:object_r:labeledfs:s0;
++#fs_use_xattr ubifs u:object_r:labeledfs:s0;
+diff --git a/sepolicy/gsm0710muxdmd2.te b/sepolicy/gsm0710muxdmd2.te
+deleted file mode 100755
+index 784f3ae..0000000
+--- a/sepolicy/gsm0710muxdmd2.te
++++ /dev/null
+@@ -1,46 +0,0 @@
+-# ==============================================
+-# Policy File of /system/bingsm0710muxdmd2 Executable File 
+-
+-
+-# ==============================================
+-# Type Declaration
+-# ==============================================
+-
+-type gsm0710muxdmd2_exec , exec_type, file_type;
+-type gsm0710muxdmd2 ,domain;
+-
+-# ==============================================
+-# Android Policy Rule
+-# ==============================================
+-
+-# ==============================================
+-# NSA Policy Rule
+-# ==============================================
+-
+-# ==============================================
+-# MTK Policy Rule
+-# ==============================================
+-
+-init_daemon_domain(gsm0710muxdmd2)
+-allow gsm0710muxdmd2 gsm0710muxd_device:chr_file open;
+-allow gsm0710muxdmd2 gsm0710muxd_device:chr_file { read write };
+-allow gsm0710muxdmd2 ctl_ril-daemon-md2_prop:property_service set;
+-allow gsm0710muxdmd2 ctl_muxreport-daemon_prop:property_service set;
+-allow gsm0710muxdmd2 gsm0710muxd_prop:property_service set;
+-allow gsm0710muxdmd2 devpts:chr_file setattr;
+-allow gsm0710muxdmd2 device:dir write;
+-allow gsm0710muxdmd2 self:capability chown;
+-allow gsm0710muxdmd2 self:capability fowner;
+-allow gsm0710muxdmd2 device:dir add_name;
+-allow gsm0710muxdmd2 device:lnk_file create;
+-allow gsm0710muxdmd2 init:unix_stream_socket connectto;
+-allow gsm0710muxdmd2 property_socket:sock_file write;
+-allow gsm0710muxdmd2 self:capability setuid;
+-allow gsm0710muxdmd2 device:dir remove_name;
+-allow gsm0710muxdmd2 device:lnk_file unlink;
+-allow gsm0710muxdmd2 eemcs_device:chr_file open;
+-allow gsm0710muxdmd2 eemcs_device:chr_file { read write };
+-allow gsm0710muxdmd2 ctl_ril-daemon-md2_prop:property_service set;
+-allow gsm0710muxdmd2 emd_device:chr_file { read write open };
+-allow gsm0710muxdmd2 radio_prop:property_service set;
+-allow gsm0710muxdmd2 ril_mux_report_case_prop:property_service set;
+diff --git a/sepolicy/guiext-server.te b/sepolicy/guiext-server.te
+old mode 100755
+new mode 100644
+index e5affbe..41f81a3
+--- a/sepolicy/guiext-server.te
++++ b/sepolicy/guiext-server.te
+@@ -13,8 +13,10 @@ type guiext-server_exec, exec_type, file_type;
+ init_daemon_domain(guiext-server)
+ 
+ # for bqdump and conversion pool
+-binder_service(guiext-server)
+-binder_use(guiext-server)
++#binder_service(guiext-server)
++#binder_use(guiext-server)
++#binder_call({domain -init}, guiext-server)
++#binder_call(guiext-server, {domain -init})
+ 
+ 
+ 
+@@ -40,13 +42,14 @@ allow guiext-server app_data_file:file write;
+ allow guiext-server proc_secmem:file { read write open };
+ 
+ # need to get display information from SF
+-allow guiext-server surfaceflinger_service:service_manager find;
++#allow guiext-server surfaceflinger_service:service_manager find;
+ 
+ # allow processes register buffer queue information to gui_ext
+-allow {domain -init -isolated_app} guiext-server_service:service_manager find;
++#allow {domain -init -isolated_app} guiext-server_service:service_manager find;
++#allow {domain -init} guiext-server_service:service_manager find;
+ 
+ # to check permission when dumpsys
+-allow guiext-server permission_service:service_manager find;
++#allow guiext-server permission_service:service_manager find;
+ 
+ # allow guiext-server to read/write fifo
+ allow guiext-server surfaceflinger:fifo_file {read write};
+diff --git a/sepolicy/hal_audio_default.te b/sepolicy/hal_audio_default.te
+new file mode 100644
+index 0000000..0d02e49
+--- /dev/null
++++ b/sepolicy/hal_audio_default.te
+@@ -0,0 +1,8 @@
++#============= hal_audio_default ==============
++# 2017/9/16: daniel_hk(danielhk@github.com)
++allow hal_audio_default ccci_device:chr_file { ioctl open read write };
++allow hal_audio_default nvram_device:blk_file { open read write };
++allow hal_audio_default nvram_data_file:file { getattr open read };
++allow hal_audio_default sysfs:file { open read };
++allow hal_audio_default tfa9897_device:chr_file { ioctl open read write };
++
+diff --git a/sepolicy/hal_bluetooth_default.te b/sepolicy/hal_bluetooth_default.te
+new file mode 100644
+index 0000000..166b0f7
+--- /dev/null
++++ b/sepolicy/hal_bluetooth_default.te
+@@ -0,0 +1,6 @@
++#============= hal_bluetooth_default ==============
++# 2017/9/16: daniel_hk(danielhk@github.com)
++allow hal_bluetooth_default nvram_device:blk_file { open read write };
++allow hal_bluetooth_default nvram_data_file:file { getattr open read };
++allow hal_bluetooth_default stpbt_device:chr_file { open read write };
++
+diff --git a/sepolicy/hal_camera_default.te b/sepolicy/hal_camera_default.te
+new file mode 100644
+index 0000000..20ceb47
+--- /dev/null
++++ b/sepolicy/hal_camera_default.te
+@@ -0,0 +1,16 @@
++#============= hal_camera_default ==============
++# 2017/9/16: daniel_hk(danielhk@github.com)
++allow hal_camera_default CAM_CAL_DRV_device:chr_file { open read write };
++allow hal_camera_default camera_isp_device:chr_file { ioctl open read write };
++allow hal_camera_default devmap_device:chr_file { open read ioctl };
++allow hal_camera_default hal_camera_default:capability { sys_nice };
++allow hal_camera_default kd_camera_flashlight_device:chr_file { ioctl open read write };
++allow hal_camera_default kd_camera_hw_device:chr_file { ioctl open read write };
++allow hal_camera_default proc:file { ioctl open read write };
++allow hal_camera_default nvram_device:blk_file { open read write };
++allow hal_camera_default nvram_data_file:file { getattr open read };
++allow hal_camera_default sysfs:file { open read };
++allow hal_camera_default vndbinder_device:chr_file { ioctl };
++allow hal_camera_default vndservicemanager:binder { call };
++allow hal_camera_default hal_graphics_mapper_hwservice:hwservice_manager { find };
++
+diff --git a/sepolicy/hal_sensors_default.te b/sepolicy/hal_sensors_default.te
+new file mode 100644
+index 0000000..c13af14
+--- /dev/null
++++ b/sepolicy/hal_sensors_default.te
+@@ -0,0 +1,4 @@
++#============= hal_sensors_default ==============
++# 2017/9/9: daniel_hk(danielhk@github.com)
++allow hal_sensors_default sysfs:file { open read };
++allow hal_sensors_default hwmsensor_device:chr_file { ioctl open read };
+diff --git a/sepolicy/hal_wifi_default.te b/sepolicy/hal_wifi_default.te
+new file mode 100644
+index 0000000..4947567
+--- /dev/null
++++ b/sepolicy/hal_wifi_default.te
+@@ -0,0 +1,4 @@
++#============= hal_wifi_default ==============
++# 2017/7/22: daniel_hk(danielhk@github.com)
++allow hal_wifi_default wmtWifi_device:chr_file { open write };
++
+diff --git a/sepolicy/hotknot_native.te b/sepolicy/hotknot_native.te
+old mode 100755
+new mode 100644
+index 8c0967c..07af2a1
+--- a/sepolicy/hotknot_native.te
++++ b/sepolicy/hotknot_native.te
+@@ -17,6 +17,7 @@ init_daemon_domain(hotknot_native)
+ # Purpose : Add for HotKnot 3.5 native service
+ binder_service(hotknot_native)
+ binder_use(hotknot_native)
++#binder_call({domain -init}, hotknot_native)
+ 
+ 
+ # Purpose : To allow register hotknot_native_service in servicemanager.
+@@ -36,8 +37,8 @@ allow hotknot_native graphics_device:dir search;
+ allow hotknot_native hotknot_prop:property_service set;
+ allow hotknot_native init:unix_stream_socket connectto;
+ allow hotknot_native property_socket:sock_file { write read };
+-allow hotknot_native system_app_data_file:dir { write search add_name };
+-allow hotknot_native system_app_data_file:file { read write open getattr create };
++#allow hotknot_native system_app_data_file:dir { write search add_name };
++#allow hotknot_native system_app_data_file:file { read write open getattr create };
+ # Date : 2015/9/23
+ # Operation : New
+ # Purpose : To allow read wifi mac address from nvram.
+diff --git a/sepolicy/icusbd.te b/sepolicy/icusbd.te
+old mode 100755
+new mode 100644
+index 4a8773b..ea3dbe1
+--- a/sepolicy/icusbd.te
++++ b/sepolicy/icusbd.te
+@@ -30,6 +30,6 @@ allow icusbd ccci_device:chr_file { read write ioctl open };
+ allow icusbd proc_icusb:file { read write open };
+ allow icusbd proc_icusb:dir search; 
+ allow icusbd self:capability dac_override;
+-allow icusbd self:netlink_socket create_socket_perms;
++#allow icusbd self:netlink_socket create_socket_perms;
+ allow icusbd usb_device:chr_file { read write ioctl open };
+ allow icusbd usb_device:dir { read open search};
+diff --git a/sepolicy/init.te b/sepolicy/init.te
+index da3bd85..6a47202 100755
+--- a/sepolicy/init.te
++++ b/sepolicy/init.te
+@@ -69,9 +69,9 @@ allow init tmpfs:lnk_file { create unlink };
+ # Date : WK15.32
+ # Operation : Migration
+ # Purpose : disable AT_SECURE for LD_PRELOAD
+-userdebug_or_eng(`
+-  allow init { domain -lmkd }:process noatsecure;
+-')
++#userdebug_or_eng(`
++#  allow init { domain -lmkd }:process noatsecure;
++#')
+ 
+ # Date : WK15.33
+ # Operation : Migration
+diff --git a/sepolicy/install_recovery.te b/sepolicy/install_recovery.te
+old mode 100755
+new mode 100644
+index e1aaebf..1efd241
+--- a/sepolicy/install_recovery.te
++++ b/sepolicy/install_recovery.te
+@@ -4,7 +4,7 @@
+ allow install_recovery bootimg_device:chr_file { open read write };
+ allow install_recovery recovery_device:chr_file { open read write };
+ allow install_recovery sysfs:file { open read write };
+-allow install_recovery tee_part_device:chr_file *;
++#allow install_recovery tee_part_device:chr_file *;
+ allow install_recovery para_block_device:blk_file rw_file_perms;
+ allow install_recovery recovery_block_device:blk_file rw_file_perms;
+ dontaudit install_recovery system_file:file entrypoint;
+diff --git a/sepolicy/installd.te b/sepolicy/installd.te
+old mode 100755
+new mode 100644
+index 16353ae..57bd1e0
+--- a/sepolicy/installd.te
++++ b/sepolicy/installd.te
+@@ -25,7 +25,7 @@ allow installd custom_file:dir search;
+ # Date : WK14.34
+ # Operation : Development GMO Feature "Move OAT to SD Card"
+ # Purpose : for GMO ROM Size Slim
+-allow installd dalvikcache_data_file:lnk_file { read getattr setattr unlink create };
++#allow installd dalvikcache_data_file:lnk_file { read getattr setattr unlink create };
+ allow installd fuse:dir { write read remove_name search create add_name getattr setattr };
+ allow installd fuse:file { write getattr setattr read create unlink open };
+ 
+@@ -54,7 +54,7 @@ allow installd platform_app:fd use;
+ # Date : WK15.03
+ # Operation : SQC1
+ # Purpose : ALPS01911340 (MTK MTBF for GMO project)
+-allow installd platform_app_tmpfs:file { open read write getattr };
++#allow installd platform_app_tmpfs:file { open read write getattr };
+ 
+ # Date : WK15.32
+ # Operation : Migration
+@@ -65,3 +65,7 @@ userdebug_or_eng(`
+ 
+ # Nougat
+ allow installd mobicore_data_file:dir { r_file_perms write remove_name rmdir };
++
++# O
++allow installd system_data_file:lnk_file { getattr };
++
+diff --git a/sepolicy/isolated_app.te b/sepolicy/isolated_app.te
+old mode 100755
+new mode 100644
+index 05f2cd9..1f148dd
+--- a/sepolicy/isolated_app.te
++++ b/sepolicy/isolated_app.te
+@@ -6,4 +6,4 @@
+ # Operation : [Rose][Free Test][FTester]
+ # Purpose : Chrome belong to GMS package. 
+ #           it is blocked by selinux, need isolated_app to open permission.
+-allow isolated_app untrusted_app_tmpfs:file write;
++#allow isolated_app untrusted_app_tmpfs:file write;
+diff --git a/sepolicy/kernel.te b/sepolicy/kernel.te
+old mode 100755
+new mode 100644
+index c2a5cf4..804b849
+--- a/sepolicy/kernel.te
++++ b/sepolicy/kernel.te
+@@ -30,7 +30,7 @@ allow kernel nvram_device:blk_file { open read write };
+ allow kernel nvdata_file:dir search;
+ allow kernel nvdata_file:file r_file_perms;
+ allow kernel wifi_data_file:dir search;
+-allow kernel self:capability { dac_read_search dac_override };
++#allow kernel self:capability { dac_read_search dac_override };
+ 
+ # Date : WK15.33
+ # Operation : Migration
+@@ -59,3 +59,6 @@ allow kernel mobicore_data_file:file getattr;
+ allow kernel mobicore_data_file:file write;
+ allow kernel mobicore_data_file:file rename;
+ 
++# 2017/7/22: daniel_hk(danielhk@github.com)
++# O
++
+diff --git a/sepolicy/mdlogger.te b/sepolicy/mdlogger.te
+old mode 100755
+new mode 100644
+index 7bea92b..13c6303
+--- a/sepolicy/mdlogger.te
++++ b/sepolicy/mdlogger.te
+@@ -69,7 +69,7 @@ allow mdlogger vfat:file create_file_perms;
+ #=========================================================
+ #modem logger permission in storage in android M version
+ #=========================================================
+-allow mdlogger log_device:chr_file w_file_perms;
++#allow mdlogger log_device:chr_file w_file_perms;
+ allow mdlogger tmpfs:lnk_file read;
+ #allow mdlogger storage_file:dir search;
+ allow mdlogger storage_file:lnk_file rw_file_perms;
+diff --git a/sepolicy/mediaserver.te b/sepolicy/mediaserver.te
+index c66f5ab..7de1a97 100755
+--- a/sepolicy/mediaserver.te
++++ b/sepolicy/mediaserver.te
+@@ -77,6 +77,12 @@ allow mediaserver camera_sysram_device:chr_file { read ioctl open };
+ # Purpose : VDEC/VENC device node
+ allow mediaserver Vcodec_device:chr_file { read write ioctl open };
+ 
++# Date : WK14.36
++# Operation : Migration
++# Purpose : MMProfile debug
++# userdebug_or_eng(`
++#allow mediaserver debugfs:file {read ioctl getattr};
++# ')
+ 
+ # Date : WK14.36
+ # Operation : Migration
+@@ -335,7 +341,7 @@ allow mediaserver proc_secmem:file { read write open};
+ # Data : WK14.48
+ # Operation : WFD
+ # Purpose : For WFD scenario
+-allow mediaserver untrusted_app_tmpfs:file write;
++#allow mediaserver untrusted_app_tmpfs:file write;
+ 
+ # Date : WK14.49
+ # Operation : WFD
+@@ -367,6 +373,7 @@ allow mediaserver offloadservice_device:chr_file { read write ioctl open };
+ # Date : WK15.30
+ # Operation : Migration
+ # Purpose : for device bring up, not to block early migration/sanity
++#allow mediaserver system_file:file execmod;
+ allow mediaserver guiext-server_service:service_manager find;
+ 
+ # Date : WK15.31
+diff --git a/sepolicy/mnld.te b/sepolicy/mnld.te
+index e53a602..302ef3f 100755
+--- a/sepolicy/mnld.te
++++ b/sepolicy/mnld.te
+@@ -19,7 +19,7 @@ allow mnld nvdata_file:lnk_file r_file_perms;
+ allow mnld mnld_data_file:dir rw_dir_perms;
+ allow mnld mnld_data_file:sock_file create_file_perms;
+ allow mnld mnld_device:chr_file rw_file_perms;
+-allow mnld gps_device:chr_file rw_file_perms;
++#allow mnld gps_device:chr_file rw_file_perms;
+ allow mnld init:unix_stream_socket connectto;
+ allow mnld property_socket:sock_file rw_file_perms;
+ allow mnld system_data_file:dir rw_dir_perms;
+@@ -57,9 +57,9 @@ allow mnld mtd_device:dir search;
+ allow mnld platform_app:unix_stream_socket connectto;
+ allow mnld system_app:unix_stream_socket connectto;
+ allow mnld apk_data_file:dir { write add_name };
+-allow mnld apk_data_file:file { write create };
+-allow mnld gps_data_file:dir rw_dir_perms;
+-allow mnld gps_data_file:file create_file_perms;
++#allow mnld apk_data_file:file { write create };
++#allow mnld gps_data_file:dir rw_dir_perms;
++#allow mnld gps_data_file:file create_file_perms;
+ 
+ # Date : WK15.30
+ # Operation : Migration
+@@ -67,6 +67,14 @@ allow mnld gps_data_file:file create_file_perms;
+ allow mnld proc_lk_env:file rw_file_perms;
+ 
+ # Nougat
++allow mnld apk_data_file:file { open read write create getattr };
++allow mnld storage_file:lnk_file { read };
++allow mnld mnt_user_file:lnk_file { read };
++allow mnld mnt_user_file:dir { search };
++#allow mnld system_data_file:file { open read write getattr };
+ allow mnld wmt_prop:file r_file_perms;
+ allow mnld rootfs:lnk_file { getattr };
+ 
++# boot_mode 
++allow mnld sysfs_boot_mode:file r_file_perms;
++
+diff --git a/sepolicy/mobicore.te b/sepolicy/mobicore.te
+old mode 100755
+new mode 100644
+index a5e4652..60f9130
+--- a/sepolicy/mobicore.te
++++ b/sepolicy/mobicore.te
+@@ -28,7 +28,10 @@ allow mobicore mobicore_admin_device:chr_file rw_file_perms;
+ allow mobicore mobicore_user_device:chr_file rw_file_perms;
+ allow mobicore mobicore_data_file:dir { rw_dir_perms rename reparent };
+ allow mobicore mobicore_data_file:file create_file_perms;
+-allow mobicore self:netlink_socket create_socket_perms;
++#allow mobicore self:netlink_socket create_socket_perms;
+ allow mobicore apk_data_file:dir write;
+ allow mobicore mobicore_data_file:dir create;
+ allow mobicore mobicore_data_file:file rw_file_perms;
++allow mobicore proc:file { read ioctl open getattr };
++allow mobicore property_socket:sock_file write;
++allow mobicore init:unix_stream_socket connectto;
+\ No newline at end of file
+diff --git a/sepolicy/mobile_log_d.te b/sepolicy/mobile_log_d.te
+old mode 100755
+new mode 100644
+index 7f0d8a0..1fd6ff5
+--- a/sepolicy/mobile_log_d.te
++++ b/sepolicy/mobile_log_d.te
+@@ -28,7 +28,7 @@ init_daemon_domain(mobile_log_d)
+ # Purpose : for L early bring-up
+ allow mobile_log_d kernel:system syslog_mod;
+ allow mobile_log_d platform_app:fd use;
+-allow mobile_log_d platform_app_tmpfs:file write;
++#allow mobile_log_d platform_app_tmpfs:file write;
+ #allow mobile_log_d unlabeled:lnk_file read;
+ 
+ #GMO project
+@@ -77,7 +77,7 @@ allow mobile_log_d data_tmpfs_log_file:file create_file_perms;
+ # Date : WK15.29
+ # Operation : Migration
+ # Purpose : for device bring up, not to block early migration
+-allow mobile_log_d log_device:chr_file r_file_perms;
++#allow mobile_log_d log_device:chr_file r_file_perms;
+ allow mobile_log_d storage_file:dir create_dir_perms;
+ allow mobile_log_d storage_file:file create_file_perms;
+ allow mobile_log_d storage_file:lnk_file create_file_perms;
+diff --git a/sepolicy/mtk_agpsd.te b/sepolicy/mtk_agpsd.te
+index 377897a..a8fbf60 100755
+--- a/sepolicy/mtk_agpsd.te
++++ b/sepolicy/mtk_agpsd.te
+@@ -34,10 +34,10 @@ allow mtk_agpsd agpsd_data_file:file create_file_perms;
+ allow mtk_agpsd agpsd_data_file:sock_file create_file_perms;
+ allow mtk_agpsd fuse:dir create_dir_perms;
+ allow mtk_agpsd fuse:file create_file_perms;
+-allow mtk_agpsd ttySDIO_device:chr_file create_file_perms;
++#allow mtk_agpsd ttySDIO_device:chr_file create_file_perms;
+ allow mtk_agpsd eemcs_device:chr_file rw_file_perms;
+ allow mtk_agpsd tmpfs:lnk_file create_file_perms;
+-allow mtk_agpsd ccci_device:chr_file create_file_perms;
++#allow mtk_agpsd ccci_device:chr_file create_file_perms;
+ allow mtk_agpsd storage_file:lnk_file create_file_perms;
+ allow mtk_agpsd mnt_user_file:dir create_dir_perms;
+ allow mtk_agpsd mnt_user_file:lnk_file create_file_perms;
+diff --git a/sepolicy/mtkmal.te b/sepolicy/mtkmal.te
+old mode 100755
+new mode 100644
+index 87860b8..297627f
+--- a/sepolicy/mtkmal.te
++++ b/sepolicy/mtkmal.te
+@@ -63,12 +63,12 @@ allow mtkmal self:netlink_route_socket { write nlmsg_write read bind create nlms
+ allow mtkmal device:lnk_file create;
+ 
+ #for RAN access wpa
+-unix_socket_send(mtkmal, wpa, wpa)
++#unix_socket_send(mtkmal, wpa, wpa)
+ allow mtkmal wpa_socket:dir rw_dir_perms;
+ allow mtkmal wpa_socket:sock_file create_file_perms;
+ allow mtkmal wifi_data_file:dir create_dir_perms;
+ allow mtkmal wifi_data_file:file create_file_perms;
+-allow mtkmal wpa:unix_dgram_socket sendto;
+-allow wpa mtkmal:unix_stream_socket connectto;
+-allow wpa mtkmal:unix_dgram_socket sendto;
+-allow wpa init:unix_dgram_socket sendto;
++#allow mtkmal wpa:unix_dgram_socket sendto;
++#allow wpa mtkmal:unix_stream_socket connectto;
++#allow wpa mtkmal:unix_dgram_socket sendto;
++#allow wpa init:unix_dgram_socket sendto;
+diff --git a/sepolicy/mtkrild.te b/sepolicy/mtkrild.te
+old mode 100755
+new mode 100644
+index 3f84090..69d80a0
+--- a/sepolicy/mtkrild.te
++++ b/sepolicy/mtkrild.te
+@@ -53,18 +53,18 @@ auditallow mtkrild system_radio_prop:property_service set;
+ allow mtkrild ril_cdma_report_prop:property_service set;
+ 
+ # Read/Write to uart driver (for GPS)
+-allow mtkrild gps_device:chr_file rw_file_perms;
++#allow mtkrild gps_device:chr_file rw_file_perms;
+ 
+ allow mtkrild tty_device:chr_file rw_file_perms;
+ 
+ # Allow mtkrild to create and use netlink sockets.
+-allow mtkrild self:netlink_socket create_socket_perms;
+-allow mtkrild self:netlink_kobject_uevent_socket create_socket_perms;
++#allow mtkrild self:netlink_socket create_socket_perms;
++#allow mtkrild self:netlink_kobject_uevent_socket create_socket_perms;
+ 
+ # Access to wake locks
+ wakelock_use(mtkrild)
+ 
+-allow mtkrild self:socket create_socket_perms;
++#allow mtkrild self:socket create_socket_perms;
+ allow mtkrild Vcodec_device:chr_file { read write open };
+ allow mtkrild devmap_device:chr_file { read ioctl open };
+ allow mtkrild devpts:chr_file { read write open };
+@@ -84,7 +84,7 @@ allow mtkrild block_device:dir search;
+ #allow mtkrild platformblk_device:dir search;
+ allow mtkrild platform_app:fd use;
+ allow mtkrild radio:fd use;
+-allow mtkrild radio_tmpfs:file write;
++#allow mtkrild radio_tmpfs:file write;
+ allow mtkrild mmcblk0_block_device:blk_file { read write open };
+ 
+ # For emulator
+diff --git a/sepolicy/netd.te b/sepolicy/netd.te
+old mode 100755
+new mode 100644
+index d4047f6..9ab2f3a
+--- a/sepolicy/netd.te
++++ b/sepolicy/netd.te
+@@ -25,7 +25,7 @@ allow netd mtk_wifi_prop:property_service set;
+ # Operation : Migration
+ # Purpose :   APP 
+ allow netd platform_app:fd use;
+-allow netd platform_app_tmpfs:file write;
++#allow netd platform_app_tmpfs:file write;
+ 
+ 
+ # Date : WK14.37
+@@ -83,7 +83,7 @@ allow netd self:capability { setuid setgid };
+ 
+ 
+ #============= netd ==============
+-allow netd isolated_app_tmpfs:file write;
++#allow netd isolated_app_tmpfs:file write;
+ 
+ # Date : W14.52
+ # Operation : Migration
+@@ -93,7 +93,7 @@ allow netd ipsec:tcp_socket { read write setopt getopt };
+ 
+ #============= netd ==============
+ allow netd untrusted_app:fd use;
+-allow netd untrusted_app_tmpfs:file write;
++#allow netd untrusted_app_tmpfs:file write;
+ 
+ #============= netd ==============
+ # Date : W14.53
+@@ -114,7 +114,7 @@ allow netd isolated_app:fd use;
+ 
+ 
+ #============= netd ==============
+-allow netd radio_tmpfs:file write;
++#allow netd radio_tmpfs:file write;
+ 
+ # Date : W15.28
+ # Operation : Migration
+@@ -131,3 +131,7 @@ allow netd wifi_data_file:dir { create setattr };
+ allow netd dhcp_data_file:dir { setattr };
+ allow netd wifi_data_file:sock_file { create setattr unlink };
+ 
++# O
++allow netd rootfs:lnk_file { getattr };
++allow netd system_file:file { lock };
++
+diff --git a/sepolicy/netdiag.te b/sepolicy/netdiag.te
+old mode 100755
+new mode 100644
+diff --git a/sepolicy/nfc.te b/sepolicy/nfc.te
+deleted file mode 100755
+index c224473..0000000
+--- a/sepolicy/nfc.te
++++ /dev/null
+@@ -1,100 +0,0 @@
+-# ==============================================
+-# MTK Policy Rule
+-# ==============================================
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : Set NFC permission to access nfc_socket.
+-
+-allow nfc nfc_socket:dir { write remove_name add_name search };
+-allow nfc nfc_socket:sock_file { write create setattr unlink };
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : Set NFC permission to access custom file.
+-
+-allow nfc custom_file:dir getattr;
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : Set NFC permission to access mt6605_device ( nfc device node ) .
+-
+-allow nfc mt6605_device:chr_file { read write getattr open ioctl };
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : Set NFC permission to access nfc data file.
+-
+-allow nfc nfc_data_file:dir { write remove_name add_name search create setattr };
+-allow nfc nfc_data_file:file { read getattr open rename write ioctl setattr create unlink };
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : Set NFC permission for update screen (activity,dialog,animation, ex: Nfc Beam)
+-
+-#allow nfc guiext-server:binder call;
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : Set NFC permission for WFD
+-
+-allow nfc surfaceflinger:dir search;
+-allow nfc surfaceflinger:file { read getattr open };
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : For Mdlogger
+-
+-allow nfc node:tcp_socket node_bind;
+-allow nfc port:tcp_socket name_bind;
+-allow nfc self:tcp_socket { setopt read bind create accept write getattr connect getopt listen };
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : For Gallery3d
+-
+-#allow nfc init:binder { transfer };
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : For NFC-JNI
+-
+-allow nfc zygote:unix_stream_socket { getopt getattr };
+-
+-
+-# ==============================================
+-# Date      : 2014/10/15  
+-# Operation : Refine
+-# Purpose   : For VPN
+-
+-allow nfc init:unix_stream_socket { write read setopt };
+-
+-
+-# ==============================================
+-# Date      : 2015/03/11
+-# Operation : SQC
+-# Purpose   : For platform_app_tmpfs
+-allow nfc platform_app_tmpfs:file write;
+-
+-
+-# allow nfc init_tmpfs:file read;
+-# allow nfc adbd:unix_stream_socket setopt;
+-# allow nfc dumpstate:fd use;
+-# allow nfc dumpstate:unix_stream_socket { read write getopt getattr };
+diff --git a/sepolicy/nvram_agent_binder.te b/sepolicy/nvram_agent_binder.te
+old mode 100755
+new mode 100644
+index bd63808..1a7503d
+--- a/sepolicy/nvram_agent_binder.te
++++ b/sepolicy/nvram_agent_binder.te
+@@ -52,13 +52,13 @@ allow nvram_agent_binder nvdata_file:file create_file_perms;
+ allow nvram_agent_binder system_file:file execute_no_trans;
+ 
+ allow nvram_agent_binder als_ps_device:chr_file { read ioctl open };
+-allow nvram_agent_binder mtk-adc-cali_device:chr_file { read write ioctl open };
++allow nvram_agent_binder mtk_adc_cali_device:chr_file { read write ioctl open };
+ allow nvram_agent_binder gsensor_device:chr_file { read ioctl open };
+ allow nvram_agent_binder gyroscope_device:chr_file { read ioctl open };
+ allow nvram_agent_binder init:unix_stream_socket connectto;
+ allow nvram_agent_binder property_socket:sock_file write;
+ allow nvram_agent_binder sysfs:file write;
+-allow nvram_agent_binder system_data_file:file { open };
++#allow nvram_agent_binder system_data_file:file { write open setattr create };
+ allow nvram_agent_binder self:capability { fowner chown dac_override fsetid };
+ allow nvram_agent_binder system_data_file:dir { create write add_name };
+ 
+diff --git a/sepolicy/platform_app.te b/sepolicy/platform_app.te
+index 8553bd4..325778e 100755
+--- a/sepolicy/platform_app.te
++++ b/sepolicy/platform_app.te
+@@ -224,12 +224,6 @@ allow platform_app ppl_agent_service:service_manager find;
+ # Package: com.android.systemupdate
+ allow platform_app ota_agent_service:service_manager find;
+ 
+-# Date : 2015/09/06
+-# Operation : SQC
+-# Purpose : [NFC][can not get nfc service]
+-# Package: com.android.gallery3d
+-allow platform_app nfc_service:service_manager find;
+-
+ # Date : 2015/09/12
+ # Operation : SQC
+ # Purpose : allow settings get file of ntfs device
+@@ -278,4 +272,5 @@ allow platform_app goodixfingerprintd_device:chr_file rw_file_perms;
+ allow platform_app goodixfingerprintd:binder { call transfer };
+ allow platform_app mobicore_device:chr_file rw_file_perms;
+ 
+-
++# dev_info 
++allow platform_app sysfs_devinfo:file r_file_perms;
+\ No newline at end of file
+diff --git a/sepolicy/ppp.te b/sepolicy/ppp.te
+old mode 100755
+new mode 100644
+index ab4b4ac..8ed292c
+--- a/sepolicy/ppp.te
++++ b/sepolicy/ppp.te
+@@ -17,7 +17,7 @@ allow ppp property_socket:sock_file write;
+ 
+ allow ppp devpts:chr_file { read write ioctl open setattr };
+ allow ppp self:capability { setuid net_raw setgid dac_override };
+-allow ppp self:packet_socket { write ioctl setopt read bind create };
++#allow ppp self:packet_socket { write ioctl setopt read bind create };
+ allow ppp shell_exec:file { read execute open execute_no_trans };
+ 
+ 
+diff --git a/sepolicy/program_binary.te b/sepolicy/program_binary.te
+old mode 100755
+new mode 100644
+index a246ef3..fdda97d
+--- a/sepolicy/program_binary.te
++++ b/sepolicy/program_binary.te
+@@ -18,6 +18,7 @@ init_daemon_domain(program_binary)
+ # Purpose : Cache program binaries for HWUI usage
+ binder_service(program_binary)
+ binder_use(program_binary)
++#binder_call({domain -init}, program_binary)
+ 
+ 
+ # Date : 2015/1/6
+diff --git a/sepolicy/property.te b/sepolicy/property.te
+old mode 100755
+new mode 100644
+index bf48586..8714239
+--- a/sepolicy/property.te
++++ b/sepolicy/property.te
+@@ -3,6 +3,12 @@
+ # ==============================================
+ type mtk_default_prop, property_type;
+ 
++# Date: W14.32
++# Operation: Migration
++# Purpose: don't allow to use default_prop
++#neverallow { domain -init -nvram_daemon } default_prop:property_service set;
++#neverallow { domain -init -system_app -system_server -recovery } ctl_default_prop:property_service set;
++
+ #=============allow ccci_mdinit to start gsm0710muxd==============
+ type ctl_gsm0710muxd_prop, property_type;
+ type ctl_gsm0710muxd-s_prop, property_type;
+diff --git a/sepolicy/radio.te b/sepolicy/radio.te
+index 4eee205..cdb52a8 100755
+--- a/sepolicy/radio.te
++++ b/sepolicy/radio.te
+@@ -41,8 +41,6 @@ allow radio bt_int_adp_socket:sock_file write;
+ allow radio guiext-server:binder { transfer call };
+ allow radio persist_ril_prop:property_service set;
+ allow radio mt6605_device:chr_file { read write ioctl open getattr };
+-allow radio nfc_socket:dir { write add_name remove_name search };
+-allow radio nfc_socket:sock_file { create write unlink setattr };
+ allow radio system_prop:property_service set;
+ 
+ # Date: wk14.40
+@@ -172,12 +170,6 @@ allow radio mal_mfi_socket:sock_file write;
+ allow radio media_wfd_prop:property_service set;
+ allow radio surfaceflinger:fifo_file { read write };
+ 
+-# Date : 2015/09/14
+-# Operation : IT
+-# Purpose : [NFC][NFC Service]
+-# Purpose : Engineering mode need to get NFC Service
+-allow radio nfc_service:service_manager find;
+-
+ # Date: 2015/9/23
+ # Operation: Program binary service
+ # Purpose : Add permission for program binary service find from ServiceManager.
+diff --git a/sepolicy/recovery.te b/sepolicy/recovery.te
+old mode 100755
+new mode 100644
+index c8da746..55caea6
+--- a/sepolicy/recovery.te
++++ b/sepolicy/recovery.te
+@@ -6,15 +6,15 @@
+ # Date : WK14.38
+ # Operation : Migration 
+ # Purpose : for recovery operation 
+-allow recovery misc_device:chr_file *;
++#allow recovery misc_device:chr_file *;
+ allow recovery block_device:dir *;
+-allow recovery block_device:blk_file *;
+-allow recovery system_block_device:blk_file *;
++#allow recovery block_device:blk_file *;
++#allow recovery system_block_device:blk_file *;
+ allow recovery vfat:dir *;
+ allow recovery vfat:file ~{ execute entrypoint };
+ #allow recovery vfat:lnk_file *;
+-allow recovery misc_sd_device:chr_file *;
+-allow recovery userdata_block_device:blk_file *;
++#allow recovery misc_sd_device:chr_file *;
++#allow recovery userdata_block_device:blk_file *;
+ 
+ # Date : WK14.39
+ # Operation : Migration 
+@@ -27,11 +27,11 @@ allow recovery rootfs:dir *;
+ # Date : WK14.41
+ # Operation : Migration 
+ # Purpose : Differential update
+-allow recovery bootimg_device:chr_file *;
+-allow recovery recovery_device:chr_file *;
+-allow recovery logo_device:chr_file *;
+-allow recovery preloader_device:chr_file *;
+-allow recovery uboot_device:chr_file *;
++#allow recovery bootimg_device:chr_file *;
++#allow recovery recovery_device:chr_file *;
++#allow recovery logo_device:chr_file *;
++#allow recovery preloader_device:chr_file *;
++#allow recovery uboot_device:chr_file *;
+ allow recovery init:dir *;
+ allow recovery init:file ~{ execute_no_trans execute entrypoint };
+ allow recovery init:lnk_file *;
+@@ -77,8 +77,8 @@ userdebug_or_eng(`
+ # Date : WK14.45
+ # Operation : SQC
+ # Purpose : partition size changed
+-allow recovery pmt_device:chr_file *;
+-allow recovery tee_part_device:chr_file *;
++#allow recovery pmt_device:chr_file *;
++#allow recovery tee_part_device:chr_file *;
+ 
+ # Date : WK14.45
+ # Operation : Migration 
+diff --git a/sepolicy/rild.te b/sepolicy/rild.te
+old mode 100755
+new mode 100644
+index 86cbf61..a4a0788
+--- a/sepolicy/rild.te
++++ b/sepolicy/rild.te
+@@ -2,4 +2,13 @@
+ # MTK Policy Rule
+ # ============
+ 
++allow rild ccci_device:chr_file { read write ioctl open };
++allow rild devpts:chr_file { read write ioctl open };
++
++allow rild ril_active_md_prop:property_service set;
++allow rild ril_mux_report_case_prop:property_service set;
++allow rild ctl_muxreport-daemon_prop:property_service set;
++
++allow rild gsm0710muxd_prop:file { read open getattr };
++allow rild ril_mux_report_case_prop:file { read open getattr };
+ 
+diff --git a/sepolicy/sdcardd.te b/sepolicy/sdcardd.te
+old mode 100755
+new mode 100644
+index 1d6a1b1..752ca4b
+--- a/sepolicy/sdcardd.te
++++ b/sepolicy/sdcardd.te
+@@ -33,7 +33,7 @@ allow sdcardd untrusted_app:fd use;
+ 
+ # Date : WK15.02
+ # Purpose : ashared memory
+-allow sdcardd platform_app_tmpfs:file write;
++#allow sdcardd platform_app_tmpfs:file write;
+ 
+ # Date : WK15.15
+ # Purpose : access mmcblk0_block_device
+diff --git a/sepolicy/shell.te b/sepolicy/shell.te
+old mode 100755
+new mode 100644
+index 52f318b..e0d371a
+--- a/sepolicy/shell.te
++++ b/sepolicy/shell.te
+@@ -25,7 +25,7 @@ allow shell bootanim_exec:file rx_file_perms;
+ allow shell ccci_fsd_exec:file rx_file_perms;
+ allow shell ccci_mdinit_exec:file rx_file_perms;
+ allow shell clatd_exec:file rx_file_perms;
+-allow shell debuggerd_exec:file rx_file_perms;
++#allow shell debuggerd_exec:file rx_file_perms;
+ allow shell dex2oat_exec:file rx_file_perms;
+ allow shell dhcp6c_exec:file rx_file_perms;
+ allow shell dhcp_exec:file rx_file_perms;
+@@ -47,7 +47,7 @@ allow shell logd_exec:file rx_file_perms;
+ allow shell matv_exec:file rx_file_perms;
+ allow shell mc6420d_exec:file rx_file_perms;
+ allow shell mdlogger_exec:file rx_file_perms;
+-allow shell mdnsd_exec:file rx_file_perms;
++#allow shell mdnsd_exec:file rx_file_perms;
+ allow shell mediaserver_exec:file rx_file_perms;
+ allow shell memsicd_exec:file rx_file_perms;
+ allow shell memsicd3416x_exec:file rx_file_perms;
+@@ -79,7 +79,7 @@ allow shell tiny_mkswap_exec:file rx_file_perms;
+ allow shell tiny_swapon_exec:file rx_file_perms;
+ allow shell wifi2agps_exec:file rx_file_perms;
+ allow shell wmt_loader_exec:file rx_file_perms;
+-allow shell wpa_exec:file rx_file_perms;
++#allow shell wpa_exec:file rx_file_perms;
+ allow shell xlog_exec:file rx_file_perms;
+ allow shell istd8303_exec:file rx_file_perms;
+ allow shell spm_loader_exec:file rx_file_perms;
+diff --git a/sepolicy/sn.te b/sepolicy/sn.te
+old mode 100755
+new mode 100644
+index 46ea6ff..d65e9cc
+--- a/sepolicy/sn.te
++++ b/sepolicy/sn.te
+@@ -46,3 +46,6 @@ allow sn property_socket:sock_file write;
+ allow sn init:unix_stream_socket { connectto };
+ allow sn rootfs:lnk_file { getattr };
+ 
++# O
++allow sn proc:file { read open ioctl };
++
+diff --git a/sepolicy/system_app.te b/sepolicy/system_app.te
+old mode 100755
+new mode 100644
+index ab7f232..62327b0
+--- a/sepolicy/system_app.te
++++ b/sepolicy/system_app.te
+@@ -147,19 +147,19 @@ binder_call(system_app, MtkCodecService)
+ # Operation: SQC
+ # Purpose: [Settings][Browser][warning kernel API'selinux enforce violation:sdcardd' when do stress test with ' AT_ST_Browser_Test.rar']
+ # Package: com.android.settings
+-allow system_app platform_app_tmpfs:file write;
++#allow system_app platform_app_tmpfs:file write;
+ 
+ # Date : 2015/01/13
+ # Operation: SQC
+ # Purpose: access ashmem of isolated_app
+ # Package: com.fw.upgrade.sysoper
+-dontaudit system_app isolated_app_tmpfs:file write;
++#dontaudit system_app isolated_app_tmpfs:file write;
+ 
+ # Date : 2015/01/14
+ # Operation: SQC
+ # Purpose: access ashmem of untrusted_app
+ # Package: android.ui
+-dontaudit system_app untrusted_app_tmpfs:file write;
++#dontaudit system_app untrusted_app_tmpfs:file write;
+ 
+ # Vanzo:songlixin on: Mon, 02 Feb 2015 16:04:07 +0800
+ # for Settings to write:  /sys/devices/platform/mt-i2c.0/i2c-0/0-005d/gesture
+@@ -198,3 +198,5 @@ allow system_server McDriverDaemon_device:chr_file rw_file_perms;
+ allow system_app perf_control_sysfs:file rw_file_perms;
+ allow system_app em_svr:unix_stream_socket connectto; 
+ 
++# dev_info 
++allow system_app sysfs_devinfo:file r_file_perms;
+diff --git a/sepolicy/system_server.te b/sepolicy/system_server.te
+old mode 100755
+new mode 100644
+index 71623e1..f54beb6
+--- a/sepolicy/system_server.te
++++ b/sepolicy/system_server.te
+@@ -43,13 +43,13 @@ allow system_server mnld:unix_dgram_socket sendto;
+ # Date : WK14.34
+ # Operation : Migration
+ # Purpose : for debug
+-allow system_server debuggerd:fd use;
++#allow system_server debuggerd:fd use;
+ allow system_server mnld_data_file:sock_file create_file_perms;
+ allow system_server mnld_data_file:sock_file rw_file_perms;
+ allow system_server mnld_data_file:dir create_file_perms;
+ allow system_server mnld_data_file:dir rw_dir_perms;
+-allow system_server gps_data_file:file create_file_perms;
+-allow system_server gps_data_file:dir rw_dir_perms;
++#allow system_server gps_data_file:file create_file_perms;
++#allow system_server gps_data_file:dir rw_dir_perms;
+ 
+ # Date : WK14.37
+ # Operation : Migration
+@@ -65,7 +65,7 @@ allow system_server anr_data_file:file relabelto;
+ # Date : WK14.38
+ # Operation : Migration
+ # Purpose : for debug
+-allow system_server debuggerd:binder call;
++#allow system_server debuggerd:binder call;
+ allow system_server resmon:fd use;
+ allow system_server resmon:fifo_file write;
+ 
+@@ -264,22 +264,14 @@ allow system_server surfaceflinger:fifo_file rw_file_perms;
+ # Operation : Migration
+ allow system_server sw_sync_device:chr_file { read write getattr open ioctl };
+ allow system_server wifi_data_file:sock_file { unlink };
+-allow system_server wifi_data_file:sock_file { unlink };
+ 
+ # Goodixfingerprintd
+ binder_call(system_server,goodixfingerprintd)
+ allow system_server McDriverDaemon_device:chr_file rw_file_perms;
+ allow system_server tee_device:chr_file r_file_perms;
+ allow system_server goodixfingerprintd_device:chr_file rw_file_perms;
++# Nougat
++allow system_server dalvikcache_data_file:file execute;
+ 
+-# RGB Display Color
+-#allow system_server display_color_sysfs:file rw_file_perms;
+-
+-# Fast Charge
+-#allow system_server fast_charge_sysfs:file rw_file_perms;
+-
+-# Smart Wake
+-#allow system_server smartwake_sysfs:file rw_file_perms;
+-
+-# Persist
+-allow system_server protect_s_data_file:dir r_dir_perms;
++# dev_info 
++allow system_server sysfs_devinfo:file r_file_perms; 
+\ No newline at end of file
+diff --git a/sepolicy/teei_daemon.te b/sepolicy/teei_daemon.te
+old mode 100755
+new mode 100644
+index ed2f0a5..a8eec23
+--- a/sepolicy/teei_daemon.te
++++ b/sepolicy/teei_daemon.te
+@@ -3,7 +3,7 @@ type teei_daemon_exec, exec_type, file_type;
+ 
+ allow teei_daemon self:capability sys_module;
+ allow teei_daemon teei_config_device:chr_file rw_file_perms;
+-allow teei_daemon teei_client_device:chr_file create_file_perms;
++#allow teei_daemon teei_client_device:chr_file create_file_perms;
+ allow teei_daemon teei_vfs_device:chr_file rw_file_perms;
+ allow teei_daemon teei_rpmb_device:chr_file rw_file_perms;
+ allow teei_daemon teei_data_file:dir create_dir_perms;
+diff --git a/sepolicy/toolbox.te b/sepolicy/toolbox.te
+old mode 100755
+new mode 100644
+index 8fcc54e..4684527
+--- a/sepolicy/toolbox.te
++++ b/sepolicy/toolbox.te
+@@ -11,7 +11,7 @@ allow toolbox self:capability { dac_read_search sys_admin dac_override };
+ # Date : WK15.43
+ # Operation : Migration
+ # Purpose : partition need to change mode
+-allow toolbox frp_block_device:blk_file setattr;
++#allow toolbox frp_block_device:blk_file setattr;
+ #allow toolbox self:capability { chown };
+ 
+ # Date : WK15.43
+@@ -26,7 +26,7 @@ allow toolbox self:capability { fowner fsetid };
+ allow toolbox protect1_block_device:blk_file rw_file_perms;
+ allow toolbox protect2_block_device:blk_file rw_file_perms;
+ allow toolbox tmpfs:dir { write rmdir setattr remove_name create add_name };
+-allow toolbox toolbox_tmpfs:file { create open setattr};
++#allow toolbox toolbox_tmpfs:file { create open setattr};
+ 
+ # Nougat
+ #allow toolbox self:capability { chown mknod };
+diff --git a/sepolicy/tunman.te b/sepolicy/tunman.te
+old mode 100755
+new mode 100644
+index 39928c2..afe74a6
+--- a/sepolicy/tunman.te
++++ b/sepolicy/tunman.te
+@@ -38,7 +38,7 @@ allow tunman system_data_file:file { open read };
+ # TUN management
+ allow tunman self:capability { net_admin net_raw dac_override };
+ allow tunman tun_device:chr_file rw_file_perms;
+-allow tunman self:tun_socket create_socket_perms;
++#allow tunman self:tun_socket create_socket_perms;
+ 
+ # Allows Max to use the fd received from Tunman
+ allow appdomain tunman:fd use;
+diff --git a/sepolicy/ueventd.te b/sepolicy/ueventd.te
+index f548797..7bb6929 100755
+--- a/sepolicy/ueventd.te
++++ b/sepolicy/ueventd.te
+@@ -10,7 +10,7 @@ allow ueventd sysfs:file setattr;
+ 
+ #add for gmo+512M project
+ allow ueventd platform_app:fd use;
+-allow ueventd platform_app_tmpfs:file write;
++#allow ueventd platform_app_tmpfs:file write;
+ 
+ # Nougat
+ allow ueventd device:chr_file { relabelfrom };
+diff --git a/sepolicy/uncrypt.te b/sepolicy/uncrypt.te
+old mode 100755
+new mode 100644
+index 3654173..e42b54a
+--- a/sepolicy/uncrypt.te
++++ b/sepolicy/uncrypt.te
+@@ -1,7 +1,10 @@
+ # ==============================================
+ # MTK Policy Rule
+ # ============
+-allow uncrypt misc_device:chr_file *;
++#allow uncrypt misc_device:chr_file *;
+ allow uncrypt system_data_file:file { open read };
+ allow uncrypt userdata_block_device:blk_file w_file_perms;
++allow uncrypt para_block_device:blk_file { write open };
++#allow uncrypt system_app_data_file:dir { getattr search };
++#allow uncrypt system_app_data_file:file { read getattr open };
+ #allow uncrypt recovery_block_device:blk_file w_file_perms;
+diff --git a/sepolicy/usbdongled.te b/sepolicy/usbdongled.te
+old mode 100755
+new mode 100644
+index c3c6db3..f731c0d
+--- a/sepolicy/usbdongled.te
++++ b/sepolicy/usbdongled.te
+@@ -7,9 +7,9 @@ net_domain(usbdongled)
+ allow usbdongled self:capability { net_admin net_raw dac_override kill };
+ 
+ # Allow ril-3gddaemon to create and use netlink sockets.
+-allow usbdongled self:netlink_socket create_socket_perms;
+-allow usbdongled self:netlink_kobject_uevent_socket create_socket_perms;
+-allow usbdongled self:netlink_nflog_socket create_socket_perms;
++#allow usbdongled self:netlink_socket create_socket_perms;
++#allow usbdongled self:netlink_kobject_uevent_socket create_socket_perms;
++#allow usbdongled self:netlink_nflog_socket create_socket_perms;
+ allow usbdongled netdomain:{tcp_socket udp_socket rawip_socket dccp_socket tun_socket} {read write getattr setattr getopt setopt};
+ allow usbdongled netdomain:fd use;
+ 
+diff --git a/sepolicy/viarild.te b/sepolicy/viarild.te
+old mode 100755
+new mode 100644
+index 4c169ec..ee4ed80
+--- a/sepolicy/viarild.te
++++ b/sepolicy/viarild.te
+@@ -49,18 +49,18 @@ auditallow viarild net_radio_prop:property_service set;
+ auditallow viarild system_radio_prop:property_service set;
+ 
+ # Read/Write to uart driver (for GPS)
+-allow viarild gps_device:chr_file rw_file_perms;
++#allow viarild gps_device:chr_file rw_file_perms;
+ 
+ allow viarild tty_device:chr_file rw_file_perms;
+ 
+ # Allow viarild to create and use netlink sockets.
+-allow viarild self:netlink_socket create_socket_perms;
+-allow viarild self:netlink_kobject_uevent_socket create_socket_perms;
++#allow viarild self:netlink_socket create_socket_perms;
++#allow viarild self:netlink_kobject_uevent_socket create_socket_perms;
+ 
+ # Access to wake locks
+ wakelock_use(viarild)
+ 
+-allow viarild self:socket create_socket_perms;
++#allow viarild self:socket create_socket_perms;
+ 
+ allow viarild Vcodec_device:chr_file { read write open };
+ allow viarild devmap_device:chr_file { read ioctl open };
+diff --git a/sepolicy/wpa.te b/sepolicy/wpa.te
+deleted file mode 100755
+index b5c2bbf..0000000
+--- a/sepolicy/wpa.te
++++ /dev/null
+@@ -1,15 +0,0 @@
+-# ==============================================
+-# MTK Policy Rule
+-# ============
+-
+-allow wpa rild_oem_socket:sock_file write;
+-allow wpa rild_oem_md2_socket:sock_file write;
+-allow wpa mtkrild:unix_stream_socket connectto;
+-# if low memory occured, and system try to free more memory, wpa_suppliant may meet a violation like:
+-# avc:  denied  { use } for  pid=4063 comm="wpa_supplicant" 
+-# path=2F6465762F6173686D656D2F4469736361726461626C654D656D6F72794173686D656D416C6C6F6361746F72202864656C6574656429 
+-# dev="tmpfs" ino=46425 scontext=u:r:wpa:s0 tcontext=u:r:platform_app:s0 tclass=fd permissive=0
+-# this is a issue caused by low memory, so we should add this rule below
+-allow wpa platform_app:fd use;
+-allow wpa platform_app_tmpfs:file write;
+-allow wpa wifi_data_file:sock_file { create setattr unlink };
+\ No newline at end of file
+--
+libgit2 0.25.0
+
+
