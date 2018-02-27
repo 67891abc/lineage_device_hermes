@@ -123,7 +123,7 @@ index 8cafa6ea8..469eb4ab8 100644
  
 -void parse_LD_SHIM_LIBS(const char* path) {
 -  g_ld_all_shim_libs.clear();
-+void parse_shim_libs(const char* path) {
++static void parse_shim_libs(const char* path) {
    if (path != nullptr) {
      // We have historically supported ':' as well as ' ' in LD_SHIM_LIBS.
      for (const auto& pair : android::base::Split(path, " :")) {

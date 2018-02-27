@@ -33,20 +33,10 @@ service gsm0710muxdmd2 /system/vendor/bin/gsm0710muxdmd2 -s /dev/ccci2_tty0 -f 5
     disabled
     oneshot
 
-service ril-daemon-mtk /system/vendor/bin/mtkrild
+service ril-daemon-mtk /system/vendor/bin/hw/rild
     class core
-    socket rild stream 660 root radio
-    socket rild2 stream 660 root radio
-    socket rild3 stream 660 root radio
-    socket rild4 stream 660 root radio
-    socket rild-ims stream 660 root radio
-    socket rild-debug stream 660 radio system
-    socket rild-oem stream 660 radio system
-    socket rild-mtk-modem stream 660 radio system
-    socket rild-atci stream 660 root radio
-    socket rild-vsim stream 660 root radio
     user root
-    group radio cache inet misc audio sdcard_r sdcard_rw log system
+    group radio cache inet misc audio log readproc wakelock system
     disabled
 
 service ril-daemon-mtkmd2 /system/vendor/bin/mtkrildmd2
@@ -66,12 +56,6 @@ service ril-daemon-mtkmd2 /system/vendor/bin/mtkrildmd2
 #  Modem related services (Begin)
 #
 
-#service permission_check /system/bin/permission_check
-#    class main
-#    user root
-#    group nvram
-#    oneshot
-
 service permission_check /system/vendor/bin/permission_check
     class main
     user root
@@ -79,13 +63,13 @@ service permission_check /system/vendor/bin/permission_check
     oneshot
 
 service ccci_fsd /system/vendor/bin/ccci_fsd 0
-    user radio
+    user root
     group radio system
     class core
     oneshot
 
 service ccci_mdinit /system/vendor/bin/ccci_mdinit 0
-    user system
+    user root
     group radio system
     class core
     oneshot

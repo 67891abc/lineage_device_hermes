@@ -1,3 +1,5 @@
+app/YGPS
+priv-app/twrpapp
 bin/applysig
 bin/dm_agent_binder
 bin/epdg_wod
