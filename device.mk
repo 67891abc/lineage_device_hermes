@@ -50,8 +50,7 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    Snap \
-    libcamera_parameters_mtk
+    Snap
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -316,7 +315,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ril_conf/apns-conf.xml:system/etc/apns-conf.xml \
     $(LOCAL_PATH)/configs/ril_conf/ecc_list.xml:system/etc/ecc_list.xml \
-    $(LOCAL_PATH)/configs/ril_conf/spn-conf.xml:system/etc/spn-conf.xml
+    $(LOCAL_PATH)/configs/ril_conf/spn_conf.xml:system/etc/spn_conf.xml
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/.tp/thermal.conf:system/vendor/etc/.tp/thermal.conf \
