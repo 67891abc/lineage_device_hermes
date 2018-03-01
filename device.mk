@@ -19,7 +19,9 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 $(call inherit-product, vendor/xiaomi/hermes/hermes-vendor.mk)
 
 # Overlay Folder
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+DEVICE_PACKAGE_OVERLAYS += \
+	$(LOCAL_PATH)/overlay \
+	$(LOCAL_PATH)/overlay-lineage
 
 # Folder path
 LOCAL_PATH := device/xiaomi/hermes
@@ -72,25 +74,24 @@ PRODUCT_PACKAGES += \
     com.android.future.usb.accessory
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.allow.mock.location=0 \
-    ro.debuggable=0 \
-    ro.zygote=zygote64_32 \
-    dalvik.vm.dex2oat-Xms=64m \
-    dalvik.vm.dex2oat-Xmx=64m \
+    ro.adb.secure=0 \
+    persist.service.acm.enable=0 \
+    ro.secure=0 \
+    ro.debuggable=1 \
     dalvik.vm.image-dex2oat-Xms=64m \
-    dalvik.vm.image-dex2oat-Xmx=512m \
+    dalvik.vm.image-dex2oat-Xmx=64m \
+    dalvik.vm.dex2oat-Xms=64m \
+    dalvik.vm.dex2oat-Xmx=512m \
     ro.dalvik.vm.native.bridge=0 \
-    persist.sys.usb.config=mtp \
+    persist.sys.usb.config=mtp,adb \
+    ro.mount.fs=EXT4 \
+    ro.allow.mock.location=0 \
     persist.debug.xlog.enable=0 \
-    camera.disable_zsl_mode=1 \
-    persist.sys.timezone=Europe/Warsaw
+    camera.disable_zsl_mode=1
 
-# PRODUCT_PROPERTY_OVERRIDES
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.kernel.android.checkjni=0 \
-    ro.telephony.ril.config=fakeiccid  \
-    persist.call_recording.enabled=true \
-    persist.call_recording.src=1 
+    persist.service.adb.enable=1 \
+    persist.service.debuggable=1
 
 # Sensor HIDL HAL
 PRODUCT_PACKAGES += \
@@ -110,7 +111,8 @@ PRODUCT_PACKAGES += \
     libtinyxml \
     audio_policy.stub \
     libtinymix \
-    libfs_mgr
+    libfs_mgr \
+    SoundRecorder
 
 # Audio HIDL HAL
 PRODUCT_PACKAGES += \
@@ -201,7 +203,7 @@ PRODUCT_PACKAGES += \
     setup_fs \
     ext4_resize \
     libext2_blkid \
-    libext2_uuid_static  \
+    libext2_uuid_static \
     superumount 
 
 PRODUCT_TAGS += dalvik.gc.type-precise
@@ -315,7 +317,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ril_conf/apns-conf.xml:system/etc/apns-conf.xml \
     $(LOCAL_PATH)/configs/ril_conf/ecc_list.xml:system/etc/ecc_list.xml \
-    $(LOCAL_PATH)/configs/ril_conf/spn_conf.xml:system/etc/spn_conf.xml
+    $(LOCAL_PATH)/configs/ril_conf/spn-conf.xml:system/etc/spn-conf.xml
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/.tp/thermal.conf:system/vendor/etc/.tp/thermal.conf \
@@ -462,6 +464,7 @@ PRODUCT_COPY_FILES += \
 
 # FM Radio
 PRODUCT_PACKAGES += \
+    android.hardware.broadcastradio@1.0-impl \
     FMRadio \
     libfmjni
 
@@ -487,3 +490,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # GPS force mode
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.force.gps.mode=gnss
+
+# LOGGY
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ramdisk/etc/loggy.sh:root/loggy.sh
+
+# Dalvik
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.heapstartsize=16m \
+    dalvik.vm.heapgrowthlimit=192m \
+    dalvik.vm.heapsize=512m \
+    dalvik.vm.heaptargetutilization=0.75 \
+    dalvik.vm.heapminfree=2m \
+    dalvik.vm.heapmaxfree=8m

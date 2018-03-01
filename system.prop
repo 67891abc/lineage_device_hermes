@@ -36,8 +36,9 @@ ro.sys.usb.mtp.whql.enable=0
 # Power off opt in IPO
 sys.ipo.pwrdncap=2
 
-ro.sys.usb.storage.type=mtp,mass_storage
+ro.sys.usb.storage.type=mtp,mass_storage,adb
 
+service.adb.root=1
 # USB BICR function
 ro.sys.usb.bicr=yes
 
@@ -208,3 +209,6 @@ ro.mtk_clearmotion_support=1
 
 # SdCardFs
 ro.sys.sdcardfs=false
+
+# RomerInfo
+ro.sys.romer=67891abc
