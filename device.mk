@@ -178,12 +178,17 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service
 
 # Gatekeeper HIDL HAL
-#PRODUCT_PACKAGES += \
-#    android.hardware.gatekeeper@1.0-impl
+PRODUCT_PACKAGES += \
+    android.hardware.gatekeeper@1.0-impl
+
+# Sensor
+PRODUCT_PACKAGES += \
+    android.hardware.sensors@1.0-impl.hermes \
+    android.hardware.sensors@1.0-service.hermes
 
 # Light HIDL HAL
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-impl
+    android.hardware.light@2.0-service.hermes
 
 # Media	
 PRODUCT_COPY_FILES += \
