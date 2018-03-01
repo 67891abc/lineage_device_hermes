@@ -52,7 +52,8 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    Snap
+    Snap \
+    libcam.client
 
 # Charger
 PRODUCT_PACKAGES += \
