@@ -12,6 +12,13 @@ TARGET_NO_FACTORYIMAGE := true
 
 TARGET_BOARD_PLATFORM := mt6795
 
+# Dont build seperate vendor img
+TARGET_COPY_OUT_VENDOR := system/vendor
+
+# Init
+TARGET_INIT_VENDOR_LIB := libinit_mtk
+TARGET_RECOVERY_DEVICE_MODULES := libinit_mtk
+
 # CPU
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
@@ -258,3 +265,7 @@ TARGET_SENSORS_DEVICE_API_VERSION := SENSORS_DEVICE_API_VERSION_1_1
 
 # Treble support 
 PRODUCT_FULL_TREBLE := false
+
+# Block based ota
+# see http://review.cyanogenmod.org/#/c/78849/1/core/Makefile
+BLOCK_BASED_OTA := false

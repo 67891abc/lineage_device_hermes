@@ -451,10 +451,6 @@ PRODUCT_PACKAGES += \
     libm4u \
     libbwc
 
-# Init
-PRODUCT_PACKAGES += \
-    hermes
-
 # Gralloc
 PRODUCT_PACKAGES += \
     libgralloc_extra
